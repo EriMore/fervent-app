@@ -1,26 +1,31 @@
 workflows:
   ios-build:
-    name: iOS Build (Fervent)
+    name: "Fervent iOS Build"
+    instance_type: mac_mini_metal
+    max_build_duration: 120
+
     environment:
-      vars:
-        LANG: en_US.UTF-8
-      xcode: latest
-      cocoapods: default
+      flutter: false
+      xcode: "14.2"    # change to the Xcode version you want if necessary
+
+    triggering:
+      events:
+        - push
+        - pull_request
+
     scripts:
-      - name: Install dependencies
-        script: |
-          # If you use CocoaPods or SwiftPM, install here. For pure SwiftUI Xcode project often not needed.
-          if [ -f Podfile ]; then
-            pod install --repo-update
-          fi
-      - name: Build
+      - name: Install certificates and provisioning (handled in UI)
+        script: echo "Code signing handled by Codemagic UI"
+
+      - name: Build archive
         script: |
           set -e
-          # Adjust path if your .xcodeproj is inside FerventApp/
-          xcodebuild -project FerventApp.xcodeproj -scheme FerventApp -configuration Release -sdk iphoneos clean build
+          # ensure we're in the Xcode project folder if needed
+          cd FerventApp || true
+          xcodebuild -workspace FerventApp.xcworkspace -scheme FerventApp -configuration Release -allowProvisioningUpdates -archivePath $PWD/build/FerventApp.xcarchive archive
+
+          # Export IPA (requires exportOptionsPlist configured in Codemagic UI or automatic signing)
+          xcodebuild -exportArchive -archivePath $PWD/build/FerventApp.xcarchive -exportOptionsPlist exportOptions.plist -exportPath $PWD/build/ipa
+
     artifacts:
-      - build/ios/ipa/*.ipa
-    publishing:
-      testflight:
-        # will be filled by Codemagic when you add App Store Connect API key
-        skip: true
+      - build/ipa/*.ipa
