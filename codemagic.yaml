@@ -1,0 +1,26 @@
+workflows:
+  ios-build:
+    name: iOS Build (Fervent)
+    environment:
+      vars:
+        LANG: en_US.UTF-8
+      xcode: latest
+      cocoapods: default
+    scripts:
+      - name: Install dependencies
+        script: |
+          # If you use CocoaPods or SwiftPM, install here. For pure SwiftUI Xcode project often not needed.
+          if [ -f Podfile ]; then
+            pod install --repo-update
+          fi
+      - name: Build
+        script: |
+          set -e
+          # Adjust path if your .xcodeproj is inside FerventApp/
+          xcodebuild -project FerventApp.xcodeproj -scheme FerventApp -configuration Release -sdk iphoneos clean build
+    artifacts:
+      - build/ios/ipa/*.ipa
+    publishing:
+      testflight:
+        # will be filled by Codemagic when you add App Store Connect API key
+        skip: true
