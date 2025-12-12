@@ -24,5 +24,13 @@ workflows:
             xcodebuild -project FerventApp.xcodeproj -scheme FerventApp -configuration Release -derivedDataPath build ONLY_ACTIVE_ARCH=NO | xcpretty || exit $?
           fi
     publishing:
-      testflight:
-        automatic: true
+      app_store_connect:
+        # use integration stored in Codemagic UI
+        auth: integration
+        # Optional: submit to TestFlight automatically
+        submit_to_testflight: true
+        # Optional: expire older builds in review before submitting
+        expire_build_submitted_for_review: true
+        # Optional: send to specific TestFlight beta groups (names exactly as in App Store Connect)
+        beta_groups:
+          - Internal Testers
