@@ -22,6 +22,12 @@ workflows:
           else
             echo "No Podfile — skipping pods"
           fi
+      - name: Set up keychain to be used for code signing
+        script: keychain initialize
+      - name: Set up provisioning profiles from environment variables
+        script: keychain add-certificates
+      - name: Set up code signing settings on Xcode project
+        script: xcode-project use-profiles
       - name: Build IPA for distribution
         script: |
           if [ -f FerventApp.xcworkspace ]; then
