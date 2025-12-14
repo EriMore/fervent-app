@@ -5,8 +5,11 @@ workflows:
     environment:
       xcode: "15.3"
       cocoapods: default
+      vars:
+        BUNDLE_ID: "com.erioluwa.fervent"
+        XCODE_SCHEME: "FerventApp"
     integrations:
-      app_store_connect: app_store_connect
+      app_store_connect: Codemagic CI
     scripts:
       - name: Install CocoaPods (if present)
         script: |
@@ -16,15 +19,27 @@ workflows:
           else
             echo "No Podfile — skipping pods"
           fi
-      - name: Build App
+      - name: Set up keychain to be used for code signing
+        script: keychain initialize
+      - name: Fetch signing files
         script: |
-          set -o pipefail
-          # If you have a workspace (CocoaPods/XCFramework), use -workspace; otherwise use -project
+          app-store-connect fetch-signing-files "$BUNDLE_ID" \
+            --type IOS_APP_STORE \
+            --create
+      - name: Set up provisioning profiles from environment variables
+        script: keychain add-certificates
+      - name: Set up code signing settings on Xcode project
+        script: xcode-project use-profiles
+      - name: Build IPA for distribution
+        script: |
           if [ -f FerventApp.xcworkspace ]; then
-            xcodebuild -workspace FerventApp.xcworkspace -scheme FerventApp -configuration Release -derivedDataPath build ONLY_ACTIVE_ARCH=NO | xcpretty || exit $?
+            xcode-project build-ipa --workspace "FerventApp.xcworkspace" --scheme "$XCODE_SCHEME"
           else
-            xcodebuild -project FerventApp.xcodeproj -scheme FerventApp -configuration Release -derivedDataPath build ONLY_ACTIVE_ARCH=NO | xcpretty || exit $?
+            xcode-project build-ipa --project "FerventApp.xcodeproj" --scheme "$XCODE_SCHEME"
           fi
+    artifacts:
+      - build/ios/ipa/*.ipa
+      - $HOME/Library/Developer/Xcode/DerivedData/**/Build/**/*.dSYM
     publishing:
       app_store_connect:
         # use integration stored in Codemagic UI
