@@ -25,9 +25,9 @@ workflows:
       - name: Build IPA for distribution
         script: |
           if [ -f FerventApp.xcworkspace ]; then
-            xcode-project build-ipa --workspace "FerventApp.xcworkspace" --scheme "$XCODE_SCHEME"
+            xcode-project build-ipa --workspace "FerventApp.xcworkspace" --scheme "$XCODE_SCHEME" --export-options-plist "exportOptions.plist"
           else
-            xcode-project build-ipa --project "FerventApp.xcodeproj" --scheme "$XCODE_SCHEME"
+            xcode-project build-ipa --project "FerventApp.xcodeproj" --scheme "$XCODE_SCHEME" --export-options-plist "exportOptions.plist"
           fi
     artifacts:
       - build/ios/ipa/*.ipa
