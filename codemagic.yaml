@@ -3,7 +3,7 @@ workflows:
     name: Build iOS (Fervent)
     instance_type: mac_mini_m2
     environment:
-      xcode: "15.3"
+      xcode: latest
       cocoapods: default
       vars:
         BUNDLE_ID: "com.erioluwa.fervent"
