@@ -38,6 +38,9 @@ workflows:
           if [ -n "$CM_PROVISIONING_PROFILE" ]; then
             echo "$CM_PROVISIONING_PROFILE" | base64 --decode > "$PROFILES_HOME/$(uuidgen).mobileprovision"
           fi
+          # List all profiles to verify they're available
+          echo "Available provisioning profiles:"
+          ls -la "$PROFILES_HOME" || true
       - name: Set up code signing settings on Xcode project
         script: xcode-project use-profiles
       - name: Build IPA for distribution
