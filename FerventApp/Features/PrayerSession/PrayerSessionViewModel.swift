@@ -32,9 +32,10 @@ final class PrayerSessionViewModel: ObservableObject {
     
     // MARK: - Private
     
-    // Store timers as nonisolated to allow cleanup in deinit
-    nonisolated private var timer: Timer?
-    nonisolated private var longPressTimer: Timer?
+    // Store timers as nonisolated(unsafe) to allow cleanup in deinit
+    // Timer invalidation is thread-safe, so this is safe
+    nonisolated(unsafe) private var timer: Timer?
+    nonisolated(unsafe) private var longPressTimer: Timer?
     
     private var startTime: Date?
     private var cancellables = Set<AnyCancellable>()
