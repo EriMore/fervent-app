@@ -8,18 +8,47 @@
 
 /* Begin PBXBuildFile section */
 		A000001100000001 /* FerventAppApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = A000000100000001 /* FerventAppApp.swift */; };
-		A000001200000001 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A000000200000001 /* ContentView.swift */; };
 		A000001300000001 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = A000000300000001 /* Assets.xcassets */; };
 		A000001400000001 /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = A000000400000001 /* Preview Assets.xcassets */; settings = {ASSET_TAGS = (preview, ); }; };
+		B100000100000001 /* Color+Fervent.swift in Sources */ = {isa = PBXBuildFile; fileRef = B000000100000001 /* Color+Fervent.swift */; };
+		B100000200000001 /* Typography+Fervent.swift in Sources */ = {isa = PBXBuildFile; fileRef = B000000200000001 /* Typography+Fervent.swift */; };
+		B100000300000001 /* AmenButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = B000000300000001 /* AmenButton.swift */; };
+		B100000400000001 /* PrayerSession.swift in Sources */ = {isa = PBXBuildFile; fileRef = B000000400000001 /* PrayerSession.swift */; };
+		B100000500000001 /* PrayerSettings.swift in Sources */ = {isa = PBXBuildFile; fileRef = B000000500000001 /* PrayerSettings.swift */; };
+		B100000600000001 /* PersistenceService.swift in Sources */ = {isa = PBXBuildFile; fileRef = B000000600000001 /* PersistenceService.swift */; };
+		B100000700000001 /* AppBlockingService.swift in Sources */ = {isa = PBXBuildFile; fileRef = B000000700000001 /* AppBlockingService.swift */; };
+		B100000800000001 /* FocusModeService.swift in Sources */ = {isa = PBXBuildFile; fileRef = B000000800000001 /* FocusModeService.swift */; };
+		B100000900000001 /* NotificationService.swift in Sources */ = {isa = PBXBuildFile; fileRef = B000000900000001 /* NotificationService.swift */; };
+		B100001000000001 /* RootCoordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = B000001000000001 /* RootCoordinator.swift */; };
+		B100001100000001 /* HomeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B000001100000001 /* HomeView.swift */; };
+		B100001200000001 /* HomeViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = B000001200000001 /* HomeViewModel.swift */; };
+		B100001300000001 /* PrayerScreenView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B000001300000001 /* PrayerScreenView.swift */; };
+		B100001400000001 /* PrayerSessionViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = B000001400000001 /* PrayerSessionViewModel.swift */; };
+		B100001500000001 /* PrayerCompletionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B000001500000001 /* PrayerCompletionView.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
 		A000000100000001 /* FerventAppApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FerventAppApp.swift; sourceTree = "<group>"; };
-		A000000200000001 /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
 		A000000300000001 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		A000000400000001 /* Preview Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = "Preview Assets.xcassets"; sourceTree = "<group>"; };
 		A000000500000001 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		A000000600000001 /* FerventApp.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = FerventApp.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		A000000700000001 /* FerventApp.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = FerventApp.entitlements; sourceTree = "<group>"; };
+		B000000100000001 /* Color+Fervent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Color+Fervent.swift"; sourceTree = "<group>"; };
+		B000000200000001 /* Typography+Fervent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Typography+Fervent.swift"; sourceTree = "<group>"; };
+		B000000300000001 /* AmenButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AmenButton.swift; sourceTree = "<group>"; };
+		B000000400000001 /* PrayerSession.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PrayerSession.swift; sourceTree = "<group>"; };
+		B000000500000001 /* PrayerSettings.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PrayerSettings.swift; sourceTree = "<group>"; };
+		B000000600000001 /* PersistenceService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PersistenceService.swift; sourceTree = "<group>"; };
+		B000000700000001 /* AppBlockingService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppBlockingService.swift; sourceTree = "<group>"; };
+		B000000800000001 /* FocusModeService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FocusModeService.swift; sourceTree = "<group>"; };
+		B000000900000001 /* NotificationService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotificationService.swift; sourceTree = "<group>"; };
+		B000001000000001 /* RootCoordinator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RootCoordinator.swift; sourceTree = "<group>"; };
+		B000001100000001 /* HomeView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeView.swift; sourceTree = "<group>"; };
+		B000001200000001 /* HomeViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeViewModel.swift; sourceTree = "<group>"; };
+		B000001300000001 /* PrayerScreenView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PrayerScreenView.swift; sourceTree = "<group>"; };
+		B000001400000001 /* PrayerSessionViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PrayerSessionViewModel.swift; sourceTree = "<group>"; };
+		B000001500000001 /* PrayerCompletionView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PrayerCompletionView.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -36,11 +65,15 @@
 		A000003000000001 /* FerventApp */ = {
 			isa = PBXGroup;
 			children = (
-				A000000100000001 /* FerventAppApp.swift */,
-				A000000200000001 /* ContentView.swift */,
+				C000000100000001 /* App */,
+				C000000200000001 /* DesignSystem */,
+				C000000300000001 /* Models */,
+				C000000400000001 /* Services */,
+				C000000500000001 /* Features */,
 				A000000300000001 /* Assets.xcassets */,
 				A000003100000001 /* Preview Content */,
 				A000000500000001 /* Info.plist */,
+				A000000700000001 /* FerventApp.entitlements */,
 			);
 			path = FerventApp;
 			sourceTree = "<group>";
@@ -67,6 +100,89 @@
 				A000003000000001 /* FerventApp */,
 				A000003200000001 /* Products */,
 			);
+			sourceTree = "<group>";
+		};
+		C000000100000001 /* App */ = {
+			isa = PBXGroup;
+			children = (
+				A000000100000001 /* FerventAppApp.swift */,
+				B000001000000001 /* RootCoordinator.swift */,
+			);
+			path = App;
+			sourceTree = "<group>";
+		};
+		C000000200000001 /* DesignSystem */ = {
+			isa = PBXGroup;
+			children = (
+				B000000100000001 /* Color+Fervent.swift */,
+				B000000200000001 /* Typography+Fervent.swift */,
+				C000000600000001 /* Components */,
+			);
+			path = DesignSystem;
+			sourceTree = "<group>";
+		};
+		C000000300000001 /* Models */ = {
+			isa = PBXGroup;
+			children = (
+				B000000400000001 /* PrayerSession.swift */,
+				B000000500000001 /* PrayerSettings.swift */,
+			);
+			path = Models;
+			sourceTree = "<group>";
+		};
+		C000000400000001 /* Services */ = {
+			isa = PBXGroup;
+			children = (
+				B000000600000001 /* PersistenceService.swift */,
+				B000000700000001 /* AppBlockingService.swift */,
+				B000000800000001 /* FocusModeService.swift */,
+				B000000900000001 /* NotificationService.swift */,
+			);
+			path = Services;
+			sourceTree = "<group>";
+		};
+		C000000500000001 /* Features */ = {
+			isa = PBXGroup;
+			children = (
+				C000000700000001 /* Home */,
+				C000000800000001 /* PrayerSession */,
+				C000000900000001 /* PrayerCompletion */,
+			);
+			path = Features;
+			sourceTree = "<group>";
+		};
+		C000000600000001 /* Components */ = {
+			isa = PBXGroup;
+			children = (
+				B000000300000001 /* AmenButton.swift */,
+			);
+			path = Components;
+			sourceTree = "<group>";
+		};
+		C000000700000001 /* Home */ = {
+			isa = PBXGroup;
+			children = (
+				B000001100000001 /* HomeView.swift */,
+				B000001200000001 /* HomeViewModel.swift */,
+			);
+			path = Home;
+			sourceTree = "<group>";
+		};
+		C000000800000001 /* PrayerSession */ = {
+			isa = PBXGroup;
+			children = (
+				B000001300000001 /* PrayerScreenView.swift */,
+				B000001400000001 /* PrayerSessionViewModel.swift */,
+			);
+			path = PrayerSession;
+			sourceTree = "<group>";
+		};
+		C000000900000001 /* PrayerCompletion */ = {
+			isa = PBXGroup;
+			children = (
+				B000001500000001 /* PrayerCompletionView.swift */,
+			);
+			path = PrayerCompletion;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -139,8 +255,22 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				A000001200000001 /* ContentView.swift in Sources */,
 				A000001100000001 /* FerventAppApp.swift in Sources */,
+				B100000100000001 /* Color+Fervent.swift in Sources */,
+				B100000200000001 /* Typography+Fervent.swift in Sources */,
+				B100000300000001 /* AmenButton.swift in Sources */,
+				B100000400000001 /* PrayerSession.swift in Sources */,
+				B100000500000001 /* PrayerSettings.swift in Sources */,
+				B100000600000001 /* PersistenceService.swift in Sources */,
+				B100000700000001 /* AppBlockingService.swift in Sources */,
+				B100000800000001 /* FocusModeService.swift in Sources */,
+				B100000900000001 /* NotificationService.swift in Sources */,
+				B100001000000001 /* RootCoordinator.swift in Sources */,
+				B100001100000001 /* HomeView.swift in Sources */,
+				B100001200000001 /* HomeViewModel.swift in Sources */,
+				B100001300000001 /* PrayerScreenView.swift in Sources */,
+				B100001400000001 /* PrayerSessionViewModel.swift in Sources */,
+				B100001500000001 /* PrayerCompletionView.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -272,8 +402,9 @@
 		A000006200000001 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				CODE_SIGN_ENTITLEMENTS = FerventApp/FerventApp.entitlements;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 1;
+				CURRENT_PROJECT_VERSION = 2;
 				DEVELOPMENT_ASSET_PATHS = "\"FerventApp/Preview Content\"";
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = NO;
@@ -297,8 +428,9 @@
 		A000006300000001 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				CODE_SIGN_ENTITLEMENTS = FerventApp/FerventApp.entitlements;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 1;
+				CURRENT_PROJECT_VERSION = 2;
 				DEVELOPMENT_ASSET_PATHS = "\"FerventApp/Preview Content\"";
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = NO;
@@ -344,4 +476,3 @@
 	};
 	rootObject = A000004100000001 /* Project object */;
 }
-

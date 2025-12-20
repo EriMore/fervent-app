@@ -62,5 +62,6 @@ workflows:
         # Optional: expire older builds in review before submitting
         expire_build_submitted_for_review: true
         # Optional: send to specific TestFlight beta groups (names exactly as in App Store Connect)
-        beta_groups:
-          - Internal Testers
+        # Uncomment and add beta group names after setting them up in App Store Connect
+        # beta_groups:
+        #   - Internal Testers
