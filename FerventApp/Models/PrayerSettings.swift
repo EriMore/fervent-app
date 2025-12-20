@@ -1,5 +1,4 @@
 import Foundation
-import FamilyControls
 
 // MARK: - Prayer Settings Model
 // User preferences for prayer sessions
@@ -52,37 +51,6 @@ struct PrayerSettings: Codable {
         self.notificationsEnabled = notificationsEnabled
         self.lastActiveSessionID = lastActiveSessionID
     }
-}
-
-// MARK: - App Selection for Blocking
-// Wrapper for FamilyActivitySelection to make it persistable
-
-/// Stores the user's selection of apps to block
-/// This wraps FamilyActivitySelection for persistence
-struct BlockedAppsSelection: Equatable {
-    
-    /// The raw FamilyActivitySelection from Screen Time picker
-    var selection: FamilyActivitySelection
-    
-    /// Whether any apps are selected
-    var hasSelection: Bool {
-        !selection.applicationTokens.isEmpty ||
-        !selection.categoryTokens.isEmpty ||
-        !selection.webDomainTokens.isEmpty
-    }
-    
-    /// Number of apps/categories selected
-    var selectionCount: Int {
-        selection.applicationTokens.count +
-        selection.categoryTokens.count +
-        selection.webDomainTokens.count
-    }
-    
-    init(selection: FamilyActivitySelection = FamilyActivitySelection()) {
-        self.selection = selection
-    }
-    
-    static let empty = BlockedAppsSelection()
 }
 
 // MARK: - Duration Presets
@@ -163,4 +131,3 @@ struct PrayerHistory: Codable {
         }
     }
 }
-

@@ -33,7 +33,6 @@
 		A000000400000001 /* Preview Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = "Preview Assets.xcassets"; sourceTree = "<group>"; };
 		A000000500000001 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		A000000600000001 /* FerventApp.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = FerventApp.app; sourceTree = BUILT_PRODUCTS_DIR; };
-		A000000700000001 /* FerventApp.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = FerventApp.entitlements; sourceTree = "<group>"; };
 		B000000100000001 /* Color+Fervent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Color+Fervent.swift"; sourceTree = "<group>"; };
 		B000000200000001 /* Typography+Fervent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Typography+Fervent.swift"; sourceTree = "<group>"; };
 		B000000300000001 /* AmenButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AmenButton.swift; sourceTree = "<group>"; };
@@ -73,7 +72,6 @@
 				A000000300000001 /* Assets.xcassets */,
 				A000003100000001 /* Preview Content */,
 				A000000500000001 /* Info.plist */,
-				A000000700000001 /* FerventApp.entitlements */,
 			);
 			path = FerventApp;
 			sourceTree = "<group>";
@@ -402,7 +400,6 @@
 		A000006200000001 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				CODE_SIGN_ENTITLEMENTS = FerventApp/FerventApp.entitlements;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 2;
 				DEVELOPMENT_ASSET_PATHS = "\"FerventApp/Preview Content\"";
@@ -428,7 +425,6 @@
 		A000006300000001 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				CODE_SIGN_ENTITLEMENTS = FerventApp/FerventApp.entitlements;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 2;
 				DEVELOPMENT_ASSET_PATHS = "\"FerventApp/Preview Content\"";

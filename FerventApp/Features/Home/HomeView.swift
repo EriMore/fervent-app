@@ -1,5 +1,4 @@
 import SwiftUI
-import FamilyControls
 
 // MARK: - Home View
 // The entry point for prayer
@@ -40,9 +39,6 @@ struct HomeView: View {
                 // Duration Selection
                 durationSection
                 
-                // App Blocking Selection
-                appBlockingSection
-                
                 Spacer()
                 
                 // Start Prayer Button
@@ -56,18 +52,12 @@ struct HomeView: View {
             }
             .padding(.horizontal, FerventSpacing.screenEdge)
         }
-        .familyActivityPicker(
-            isPresented: $viewModel.showingAppPicker,
-            selection: viewModel.appSelection
-        )
         .sheet(isPresented: $viewModel.showingTimePicker) {
             timePickerSheet
         }
         .task {
-            // Request permissions on first launch
-            if viewModel.needsPermissions {
-                await coordinator.requestPermissions()
-            }
+            // Request notification permissions on first launch
+            await viewModel.requestNotificationPermission()
         }
     }
     
@@ -148,50 +138,6 @@ struct HomeView: View {
         .buttonStyle(.plain)
     }
     
-    // MARK: - App Blocking Section
-    
-    private var appBlockingSection: some View {
-        VStack(spacing: FerventSpacing.md) {
-            Button {
-                viewModel.openAppPicker()
-            } label: {
-                HStack {
-                    Image(systemName: "app.badge.fill")
-                        .foregroundColor(.warmAccent)
-                    
-                    if viewModel.hasAppsSelected {
-                        Text("\(viewModel.selectedAppsCount) apps to block")
-                            .font(.ferventBody)
-                            .foregroundColor(.primaryText)
-                    } else {
-                        Text("Select apps to block")
-                            .font(.ferventBody)
-                            .foregroundColor(.secondaryText)
-                    }
-                    
-                    Spacer()
-                    
-                    Image(systemName: "chevron.right")
-                        .font(.ferventCaption)
-                        .foregroundColor(.secondaryText)
-                }
-                .padding(FerventSpacing.md)
-                .background(
-                    RoundedRectangle(cornerRadius: 12)
-                        .fill(Color.charcoal.opacity(0.5))
-                        .stroke(Color.ferventOrange.opacity(0.3), lineWidth: 1)
-                )
-            }
-            .buttonStyle(.plain)
-            
-            if !viewModel.isAppBlockingAuthorized {
-                Text("Screen Time permission required")
-                    .font(.ferventCaption)
-                    .foregroundColor(.warmAccent)
-            }
-        }
-    }
-    
     // MARK: - Start Prayer Button
     
     private var startPrayerButton: some View {
@@ -221,8 +167,6 @@ struct HomeView: View {
             .shadow(color: .ferventOrange.opacity(0.4), radius: 20, y: 10)
         }
         .buttonStyle(.plain)
-        .disabled(!viewModel.canStartPrayer)
-        .opacity(viewModel.canStartPrayer ? 1 : 0.6)
     }
     
     // MARK: - Schedule Button
@@ -300,4 +244,3 @@ struct HomeView: View {
     HomeView()
         .environmentObject(RootCoordinator())
 }
-

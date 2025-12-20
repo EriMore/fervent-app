@@ -94,16 +94,13 @@ final class RootCoordinator: ObservableObject {
     
     /// Start a new prayer session
     func startPrayer(duration: TimeInterval) async {
-        // Get blocked app bundle IDs (simplified for tokens)
-        let blockedIDs = appBlocking.selectedApps.applicationTokens.map { _ in "blocked" }
-        
-        // Create session
+        // Create session (app blocking IDs empty until Family Controls is available)
         let session = persistence.startSession(
             intendedDuration: duration,
-            blockedAppBundleIDs: blockedIDs
+            blockedAppBundleIDs: []
         )
         
-        // Start blocking apps
+        // Start blocking apps (no-op if not available)
         appBlocking.startBlocking()
         
         // Enter focus mode
@@ -169,12 +166,8 @@ final class RootCoordinator: ObservableObject {
     
     /// Request all necessary permissions
     func requestPermissions() async {
-        do {
-            // Request app blocking permission
-            try await appBlocking.requestAuthorization()
-        } catch {
-            print("App blocking authorization failed: \(error)")
-        }
+        // App blocking requires Family Controls capability (pending Apple approval)
+        // For now, we only request notification permission
         
         do {
             // Request notification permission
@@ -186,7 +179,9 @@ final class RootCoordinator: ObservableObject {
     
     /// Check if key permissions are granted
     var hasRequiredPermissions: Bool {
-        appBlocking.isAuthorized
+        // Notifications are the main requirement for MVP
+        // App blocking will be added when Family Controls is approved
+        notifications.isAuthorized
     }
 }
 
@@ -229,4 +224,3 @@ extension EnvironmentValues {
         set { self[RootCoordinatorKey.self] = newValue }
     }
 }
-
