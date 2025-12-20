@@ -41,15 +41,16 @@ final class RootCoordinator: ObservableObject {
     // MARK: - Initialization
     
     init(
-        persistence: PersistenceService = .shared,
-        appBlocking: AppBlockingService = .shared,
-        focusMode: FocusModeService = .shared,
-        notifications: NotificationService = .shared
+        persistence: PersistenceService? = nil,
+        appBlocking: AppBlockingService? = nil,
+        focusMode: FocusModeService? = nil,
+        notifications: NotificationService? = nil
     ) {
-        self.persistence = persistence
-        self.appBlocking = appBlocking
-        self.focusMode = focusMode
-        self.notifications = notifications
+        // Access shared instances on main actor
+        self.persistence = persistence ?? PersistenceService.shared
+        self.appBlocking = appBlocking ?? AppBlockingService.shared
+        self.focusMode = focusMode ?? FocusModeService.shared
+        self.notifications = notifications ?? NotificationService.shared
         
         setupObservers()
     }

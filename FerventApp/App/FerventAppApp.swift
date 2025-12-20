@@ -79,8 +79,15 @@ class AppDelegate: NSObject, UIApplicationDelegate {
     }
     
     func applicationDidBecomeActive(_ application: UIApplication) {
-        // Clear badge count
-        application.applicationIconBadgeNumber = 0
+        // Clear badge count using modern API
+        Task {
+            do {
+                try await UNUserNotificationCenter.current().setBadgeCount(0)
+            } catch {
+                // Fallback for older iOS versions
+                application.applicationIconBadgeNumber = 0
+            }
+        }
     }
 }
 
@@ -90,4 +97,3 @@ class AppDelegate: NSObject, UIApplicationDelegate {
     RootView()
         .environmentObject(RootCoordinator())
 }
-

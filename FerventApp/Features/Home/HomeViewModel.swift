@@ -30,14 +30,15 @@ final class HomeViewModel: ObservableObject {
     // MARK: - Initialization
     
     init(
-        notifications: NotificationService = .shared,
-        persistence: PersistenceService = .shared
+        notifications: NotificationService? = nil,
+        persistence: PersistenceService? = nil
     ) {
-        self.notifications = notifications
-        self.persistence = persistence
+        // Access shared instances on main actor
+        self.notifications = notifications ?? NotificationService.shared
+        self.persistence = persistence ?? PersistenceService.shared
         
         // Load saved duration
-        self.selectedDuration = persistence.settings.defaultPrayerDuration
+        self.selectedDuration = self.persistence.settings.defaultPrayerDuration
         self.selectedPreset = PrayerDurationPreset.preset(for: selectedDuration)
     }
     

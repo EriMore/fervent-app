@@ -32,14 +32,16 @@ final class PrayerSessionViewModel: ObservableObject {
     
     // MARK: - Private
     
-    private var timer: Timer?
+    // Store timers as nonisolated to allow cleanup in deinit
+    nonisolated private var timer: Timer?
+    nonisolated private var longPressTimer: Timer?
+    
     private var startTime: Date?
     private var cancellables = Set<AnyCancellable>()
     
     // Long press configuration
     private let longPressDuration: TimeInterval = 2.0 // seconds to hold
     private var longPressStartTime: Date?
-    private var longPressTimer: Timer?
     
     // MARK: - Initialization
     
@@ -51,9 +53,10 @@ final class PrayerSessionViewModel: ObservableObject {
         startSession()
     }
     
-    deinit {
-        stopTimer()
-        stopLongPressTimer()
+    nonisolated deinit {
+        // Cleanup timers - Timer invalidation is thread-safe
+        timer?.invalidate()
+        longPressTimer?.invalidate()
     }
     
     // MARK: - Computed Properties
@@ -199,4 +202,3 @@ final class PrayerSessionViewModel: ObservableObject {
         longPressTimer = nil
     }
 }
-
