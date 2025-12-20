@@ -54,10 +54,6 @@
 	<string>Fervent uses Screen Time to block distracting apps during your prayer sessions, helping you focus on communion with God.</string>
 	<key>NSUserNotificationsUsageDescription</key>
 	<string>Fervent sends notifications to remind you when it's time to pray.</string>
-	<key>UIBackgroundModes</key>
-	<array>
-		<string>processing</string>
-	</array>
 </dict>
 </plist>
 
