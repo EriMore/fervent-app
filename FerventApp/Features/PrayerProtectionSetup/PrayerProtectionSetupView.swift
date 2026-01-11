@@ -56,7 +56,7 @@ struct PrayerProtectionSetupView: View {
                 .padding(.horizontal, FerventSpacing.screenEdge)
             }
         }
-        .onChange(of: viewModel.isComplete) { isComplete in
+        .onChange(of: viewModel.isComplete) { _, isComplete in
             if isComplete {
                 // Navigate to home
                 coordinator.goHome()

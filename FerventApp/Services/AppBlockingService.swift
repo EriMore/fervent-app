@@ -128,8 +128,12 @@ final class AppBlockingService: ObservableObject {
         }
         
         // Apply blocking using ManagedSettingsStore
-        managedSettingsStore.shield.applications = selection.applicationTokens
-        managedSettingsStore.shield.applicationCategories = .specific(selection.categoryTokens)
+        if !selection.applicationTokens.isEmpty {
+            managedSettingsStore.shield.applications = selection.applicationTokens
+        }
+        if !selection.categoryTokens.isEmpty {
+            managedSettingsStore.shield.applicationCategories = ShieldSettings.ActivityCategorySelection.specific(selection.categoryTokens)
+        }
         
         isBlocking = true
         print("App Blocking: Started blocking \(selectionCount) item(s)")
