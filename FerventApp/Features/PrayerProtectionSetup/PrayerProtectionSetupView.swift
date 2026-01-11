@@ -1,9 +1,11 @@
 import SwiftUI
-import FamilyControls
 
 // MARK: - Prayer Protection Setup View
-// Permission-gated setup flow for app blocking
+// Stub implementation - Family Controls requires Apple approval
 // "Set apart for prayer" (1 Corinthians 7:5)
+//
+// NOTE: This is a simplified setup flow while waiting for Apple
+// to approve Family Controls capability. App blocking is disabled.
 
 struct PrayerProtectionSetupView: View {
     
@@ -29,36 +31,36 @@ struct PrayerProtectionSetupView: View {
             .ignoresSafeArea()
             
             // Content
-            ScrollView {
-                VStack(spacing: FerventSpacing.section) {
-                    Spacer()
-                        .frame(height: FerventSpacing.xl)
-                    
-                    // Title
-                    titleSection
-                    
-                    Spacer()
-                        .frame(height: FerventSpacing.lg)
-                    
-                    // Authorization section
-                    if viewModel.showAuthorizationButton {
-                        authorizationSection
-                    }
-                    
-                    // App selection section
-                    if viewModel.showAppSelection {
-                        appSelectionSection
-                    }
-                    
-                    Spacer()
-                        .frame(height: FerventSpacing.xl)
-                }
-                .padding(.horizontal, FerventSpacing.screenEdge)
+            VStack(spacing: FerventSpacing.section) {
+                Spacer()
+                
+                // Logo
+                FerventLogo(intensity: 0.5, isBreathing: true, size: 80)
+                
+                Spacer()
+                    .frame(height: FerventSpacing.xl)
+                
+                // Title
+                titleSection
+                
+                Spacer()
+                    .frame(height: FerventSpacing.lg)
+                
+                // Notice about Family Controls
+                noticeSection
+                
+                Spacer()
+                
+                // Continue button
+                continueButton
+                
+                Spacer()
+                    .frame(height: FerventSpacing.xl)
             }
+            .padding(.horizontal, FerventSpacing.screenEdge)
         }
         .onChange(of: viewModel.isComplete) { _, isComplete in
             if isComplete {
-                // Navigate to home
                 coordinator.goHome()
             }
         }
@@ -68,95 +70,65 @@ struct PrayerProtectionSetupView: View {
     
     private var titleSection: some View {
         VStack(spacing: FerventSpacing.md) {
-            Text("Select apps to set aside during prayer")
-                .font(.ferventTitle)
+            Text("Welcome to Fervent")
+                .font(.ferventDisplay)
                 .foregroundColor(.primaryText)
                 .multilineTextAlignment(.center)
             
-            Text("These apps will be unavailable only while you pray")
+            Text("A sacred space for prayer")
                 .font(.ferventBody)
                 .foregroundColor(.secondaryText)
                 .multilineTextAlignment(.center)
         }
     }
     
-    // MARK: - Authorization Section
+    // MARK: - Notice Section
     
-    private var authorizationSection: some View {
+    private var noticeSection: some View {
         VStack(spacing: FerventSpacing.md) {
-            // Status
-            Text(viewModel.authorizationStatusText)
-                .font(.ferventLabel)
+            Image(systemName: "info.circle")
+                .font(.system(size: 32))
+                .foregroundColor(.ferventOrange.opacity(0.7))
+            
+            Text("App blocking coming soon")
+                .font(.ferventSubtitle)
+                .foregroundColor(.primaryText)
+            
+            Text("We're waiting for Apple to approve our Family Controls capability. Until then, you can still use all prayer features — app blocking will be enabled in a future update.")
+                .font(.ferventCaption)
                 .foregroundColor(.secondaryText)
-            
-            // Authorization button
-            Button {
-                Task {
-                    await viewModel.requestAuthorization()
-                }
-            } label: {
-                Text("Authorize Screen Time")
-                    .font(.ferventButton)
-                    .foregroundColor(.charcoal)
-                    .frame(maxWidth: .infinity)
-                    .padding(.vertical, FerventSpacing.md)
-                    .background(
-                        RoundedRectangle(cornerRadius: 12)
-                            .fill(Color.ferventOrange)
-                    )
-            }
-            .buttonStyle(.plain)
-            .disabled(viewModel.isRequestingAuthorization)
-            
-            if viewModel.isRequestingAuthorization {
-                ProgressView()
-                    .progressViewStyle(CircularProgressViewStyle(tint: .ferventOrange))
-                    .padding(.top, FerventSpacing.sm)
-            }
+                .multilineTextAlignment(.center)
+                .padding(.horizontal, FerventSpacing.lg)
         }
+        .padding(.vertical, FerventSpacing.lg)
+        .padding(.horizontal, FerventSpacing.md)
+        .background(
+            RoundedRectangle(cornerRadius: 16)
+                .fill(Color.charcoal.opacity(0.5))
+                .overlay(
+                    RoundedRectangle(cornerRadius: 16)
+                        .stroke(Color.ferventOrange.opacity(0.2), lineWidth: 1)
+                )
+        )
     }
     
-    // MARK: - App Selection Section
+    // MARK: - Continue Button
     
-    private var appSelectionSection: some View {
-        VStack(spacing: FerventSpacing.lg) {
-            // FamilyActivityPicker
-            FamilyActivityPicker(selection: $viewModel.selection)
-                .frame(height: 400)
-            
-            // Selection count
-            if viewModel.hasSelection {
-                Text("\(viewModel.selectionCount) app\(viewModel.selectionCount == 1 ? "" : "s") selected")
-                    .font(.ferventCaption)
-                    .foregroundColor(.secondaryText)
-            }
-            
-            // Complete button
-            Button {
-                viewModel.saveSelection()
-            } label: {
-                Text("Continue")
-                    .font(.ferventButton)
-                    .foregroundColor(.charcoal)
-                    .frame(maxWidth: .infinity)
-                    .padding(.vertical, FerventSpacing.md)
-                    .background(
-                        RoundedRectangle(cornerRadius: 12)
-                            .fill(viewModel.canComplete ? Color.ferventOrange : Color.charcoal.opacity(0.5))
-                    )
-            }
-            .buttonStyle(.plain)
-            .disabled(!viewModel.canComplete)
-            
-            // Error message
-            if let errorMessage = viewModel.errorMessage {
-                Text(errorMessage)
-                    .font(.ferventCaption)
-                    .foregroundColor(.emberRed)
-                    .multilineTextAlignment(.center)
-                    .padding(.horizontal)
-            }
+    private var continueButton: some View {
+        Button {
+            viewModel.completeSetup()
+        } label: {
+            Text("Begin Praying")
+                .font(.ferventButton)
+                .foregroundColor(.charcoal)
+                .frame(maxWidth: .infinity)
+                .padding(.vertical, FerventSpacing.md)
+                .background(
+                    RoundedRectangle(cornerRadius: 12)
+                        .fill(Color.ferventOrange)
+                )
         }
+        .buttonStyle(.plain)
     }
 }
 

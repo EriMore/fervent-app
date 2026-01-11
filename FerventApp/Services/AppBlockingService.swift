@@ -1,13 +1,15 @@
 import Foundation
 import Combine
-import FamilyControls
-import ManagedSettings
 
 // MARK: - App Blocking Service
-// Screen Time API integration for prayer protection
+// Stub implementation - Family Controls requires Apple approval
 // "Watch and pray" (Matthew 26:41)
+//
+// NOTE: Family Controls capability requires explicit approval from Apple.
+// Once approved, restore the full implementation with FamilyControls and ManagedSettings.
+// For now, app blocking is disabled but prayer features work normally.
 
-/// Manages app blocking using Apple's Family Controls framework
+/// Manages app blocking - STUB until Apple approves Family Controls
 @MainActor
 final class AppBlockingService: ObservableObject {
     
@@ -18,117 +20,87 @@ final class AppBlockingService: ObservableObject {
     // MARK: - Published State
     
     /// Whether the user has granted Family Controls authorization
+    /// Always false in stub - Family Controls not available
     @Published private(set) var isAuthorized: Bool = false
     
     /// Whether blocking is currently active
     @Published private(set) var isBlocking: Bool = false
     
-    /// Currently selected app tokens
-    @Published var selection = FamilyActivitySelection()
+    // MARK: - Stub Properties
+    
+    /// Placeholder for app selection count
+    private var selectedAppCount: Int = 0
     
     // MARK: - Private Properties
     
-    private let authorizationCenter = AuthorizationCenter.shared
-    private let managedSettingsStore = ManagedSettingsStore()
     private let persistence: PersistenceService
     
     // MARK: - Initialization
     
     private init(persistence: PersistenceService? = nil) {
         self.persistence = persistence ?? PersistenceService.shared
-        
-        // Check current authorization status
-        checkAuthorizationStatus()
     }
     
-    // MARK: - Authorization
+    // MARK: - Authorization (Stub)
     
-    /// Check current authorization status
+    /// Check current authorization status - always unavailable in stub
     func checkAuthorizationStatus() {
-        isAuthorized = (authorizationCenter.authorizationStatus == .approved)
+        isAuthorized = false
     }
     
-    /// Request Family Controls authorization
+    /// Request Family Controls authorization - shows unavailable message
     func requestAuthorization() async throws {
-        do {
-            try await authorizationCenter.requestAuthorization()
-            isAuthorized = (authorizationCenter.authorizationStatus == .approved)
-            
-            if !isAuthorized {
-                throw AppBlockingError.notAuthorized
-            }
-        } catch {
-            throw AppBlockingError.authorizationFailed(error)
-        }
+        // Family Controls requires Apple approval
+        throw AppBlockingError.notAvailable
     }
     
-    // MARK: - Selection Management
+    // MARK: - Selection Management (Stub)
     
-    /// Save the current selection
-    func saveSelection(_ newSelection: FamilyActivitySelection) {
-        self.selection = newSelection
-        
-        // Note: FamilyActivitySelection cannot be encoded/decoded directly
-        // We store it in memory only - the selection persists while the app is running
-        // Mark setup as completed so we don't show setup screen again
+    /// Save selection (stub - just marks setup as complete)
+    func saveSelection() {
+        selectedAppCount = 1 // Pretend something is selected
         persistence.markSetupCompleted()
     }
     
     /// Clear the current selection
     func clearSelection() {
-        selection = FamilyActivitySelection()
+        selectedAppCount = 0
     }
     
-    /// Whether user has selected any apps to block
+    /// Whether user has "selected" apps (stub - always true after setup)
     var hasSelection: Bool {
-        !selection.applicationTokens.isEmpty || !selection.categoryTokens.isEmpty
+        selectedAppCount > 0
     }
     
-    /// Number of items selected
+    /// Number of items selected (stub)
     var selectionCount: Int {
-        selection.applicationTokens.count + selection.categoryTokens.count
+        selectedAppCount
     }
     
-    // MARK: - Blocking Control
+    // MARK: - Blocking Control (Stub - No-op)
     
-    /// Start blocking selected apps
+    /// Start blocking selected apps (no-op in stub)
     func startBlocking() {
-        guard isAuthorized else {
-            print("App Blocking: Skipped - not authorized")
-            return
-        }
-        
         guard hasSelection else {
-            print("App Blocking: Skipped - no apps selected")
+            print("App Blocking: Skipped - no apps selected (stub)")
             return
         }
         
-        // Apply blocking using ManagedSettingsStore
-        if !selection.applicationTokens.isEmpty {
-            managedSettingsStore.shield.applications = selection.applicationTokens
-        }
-        if !selection.categoryTokens.isEmpty {
-            managedSettingsStore.shield.applicationCategories = ShieldSettings.ActivityCategorySelection.specific(selection.categoryTokens)
-        }
-        
+        // Stub: Just log, no actual blocking
         isBlocking = true
-        print("App Blocking: Started blocking \(selectionCount) item(s)")
+        print("App Blocking: Would block apps (stub - Family Controls not available)")
     }
     
-    /// Stop blocking all apps
+    /// Stop blocking all apps (no-op in stub)
     func stopBlocking() {
-        managedSettingsStore.shield.applications = nil
-        managedSettingsStore.shield.applicationCategories = nil
         isBlocking = false
-        print("App Blocking: Stopped blocking")
+        print("App Blocking: Stopped (stub)")
     }
     
-    /// Emergency stop - ensures all apps are unblocked
+    /// Emergency stop (no-op in stub)
     func emergencyUnblock() {
-        managedSettingsStore.shield.applications = nil
-        managedSettingsStore.shield.applicationCategories = nil
         isBlocking = false
-        print("App Blocking: Emergency unblock executed")
+        print("App Blocking: Emergency unblock (stub)")
     }
 }
 

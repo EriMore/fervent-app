@@ -1,117 +1,76 @@
 import SwiftUI
-import FamilyControls
 
 // MARK: - Prayer Protection Setup View Model
-// Manages the setup flow for app blocking
+// Stub implementation - Family Controls requires Apple approval
 // "Set apart for prayer" (1 Corinthians 7:5)
+//
+// NOTE: This is a simplified setup flow while waiting for Apple
+// to approve Family Controls capability. App blocking is disabled.
 
 @MainActor
 final class PrayerProtectionSetupViewModel: ObservableObject {
     
     // MARK: - Published State
     
-    /// Whether the user is authorized
-    @Published private(set) var isAuthorized: Bool = false
-    
-    /// Whether authorization is in progress
-    @Published var isRequestingAuthorization: Bool = false
-    
-    /// Currently selected apps (for FamilyActivityPicker)
-    @Published var selection = FamilyActivitySelection()
-    
     /// Whether setup is complete
     @Published var isComplete: Bool = false
     
-    /// Error message to display
+    /// Error message to display (shows Family Controls unavailable notice)
     @Published var errorMessage: String?
+    
+    /// Whether to show the unavailable notice
+    @Published var showUnavailableNotice: Bool = true
     
     // MARK: - Services
     
     private let appBlocking: AppBlockingService
+    private let persistence: PersistenceService
     
     // MARK: - Initialization
     
-    init(appBlocking: AppBlockingService? = nil) {
+    init(appBlocking: AppBlockingService? = nil, persistence: PersistenceService? = nil) {
         self.appBlocking = appBlocking ?? AppBlockingService.shared
-        checkAuthorization()
+        self.persistence = persistence ?? PersistenceService.shared
     }
     
     // MARK: - Computed Properties
     
-    /// Whether authorization button should be shown
+    /// Whether authorization button should be shown (always false in stub)
     var showAuthorizationButton: Bool {
-        !isAuthorized
+        false
     }
     
-    /// Whether app selection should be shown
+    /// Whether app selection should be shown (always false in stub)
     var showAppSelection: Bool {
-        isAuthorized
+        false
     }
     
-    /// Whether apps are currently selected
+    /// Whether apps are "selected" (stub - true after continue)
     var hasSelection: Bool {
-        !selection.applicationTokens.isEmpty || !selection.categoryTokens.isEmpty
+        appBlocking.hasSelection
     }
     
-    /// Number of items selected
+    /// Number of items selected (stub)
     var selectionCount: Int {
-        selection.applicationTokens.count + selection.categoryTokens.count
+        0
     }
     
-    /// Whether complete button should be enabled
+    /// Whether complete button should be enabled (always true in stub)
     var canComplete: Bool {
-        isAuthorized && hasSelection
+        true
     }
     
-    /// Authorization status text
+    /// Authorization status text (stub)
     var authorizationStatusText: String {
-        if isAuthorized {
-            return "Authorized"
-        } else {
-            return "Authorization required"
-        }
+        "App blocking requires Apple approval"
     }
     
     // MARK: - Actions
     
-    /// Check current authorization status
-    func checkAuthorization() {
-        isAuthorized = AuthorizationCenter.shared.authorizationStatus == .approved
-    }
-    
-    /// Request Screen Time authorization
-    func requestAuthorization() async {
-        guard !isAuthorized else { return }
-        
-        isRequestingAuthorization = true
-        errorMessage = nil
-        
-        do {
-            try await appBlocking.requestAuthorization()
-            checkAuthorization()
-        } catch {
-            errorMessage = error.localizedDescription
-        }
-        
-        isRequestingAuthorization = false
-    }
-    
-    /// Save the current selection
-    func saveSelection() {
-        guard isAuthorized else {
-            errorMessage = "Please authorize Screen Time access first."
-            return
-        }
-        
-        guard hasSelection else {
-            errorMessage = "Please select at least one app to block during prayer."
-            return
-        }
-        
-        // Save selection to AppBlockingService
-        appBlocking.saveSelection(selection)
-        
-        // Mark setup as complete
+    /// Complete setup without app selection (stub)
+    func completeSetup() {
+        // Save stub selection and mark setup complete
+        appBlocking.saveSelection()
         isComplete = true
         errorMessage = nil
     }
