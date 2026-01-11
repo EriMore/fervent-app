@@ -25,10 +25,12 @@ workflows:
       - name: Build IPA for distribution
         script: |
           set -e
+          # Use project's exportOptions.plist (without provisioningProfiles)
+          # Codemagic's ios_signing handles provisioning automatically
           if [ -f FerventApp.xcworkspace ]; then
-            xcode-project build-ipa --workspace "FerventApp.xcworkspace" --scheme "$XCODE_SCHEME"
+            xcode-project build-ipa --workspace "FerventApp.xcworkspace" --scheme "$XCODE_SCHEME" --export-options-plist "exportOptions.plist"
           else
-            xcode-project build-ipa --project "FerventApp.xcodeproj" --scheme "$XCODE_SCHEME"
+            xcode-project build-ipa --project "FerventApp.xcodeproj" --scheme "$XCODE_SCHEME" --export-options-plist "exportOptions.plist"
           fi
     artifacts:
       - build/ios/ipa/*.ipa
