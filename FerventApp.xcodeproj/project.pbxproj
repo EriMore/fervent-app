@@ -25,6 +25,8 @@
 		B100001300000001 /* PrayerScreenView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B000001300000001 /* PrayerScreenView.swift */; };
 		B100001400000001 /* PrayerSessionViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = B000001400000001 /* PrayerSessionViewModel.swift */; };
 		B100001500000001 /* PrayerCompletionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B000001500000001 /* PrayerCompletionView.swift */; };
+		B100001600000001 /* PrayerProtectionSetupView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B000001600000001 /* PrayerProtectionSetupView.swift */; };
+		B100001700000001 /* PrayerProtectionSetupViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = B000001700000001 /* PrayerProtectionSetupViewModel.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -33,6 +35,7 @@
 		A000000400000001 /* Preview Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = "Preview Assets.xcassets"; sourceTree = "<group>"; };
 		A000000500000001 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		A000000600000001 /* FerventApp.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = FerventApp.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		A000000700000001 /* FerventApp.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = FerventApp.entitlements; sourceTree = "<group>"; };
 		B000000100000001 /* Color+Fervent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Color+Fervent.swift"; sourceTree = "<group>"; };
 		B000000200000001 /* Typography+Fervent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Typography+Fervent.swift"; sourceTree = "<group>"; };
 		B000000300000001 /* AmenButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AmenButton.swift; sourceTree = "<group>"; };
@@ -48,6 +51,8 @@
 		B000001300000001 /* PrayerScreenView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PrayerScreenView.swift; sourceTree = "<group>"; };
 		B000001400000001 /* PrayerSessionViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PrayerSessionViewModel.swift; sourceTree = "<group>"; };
 		B000001500000001 /* PrayerCompletionView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PrayerCompletionView.swift; sourceTree = "<group>"; };
+		B000001600000001 /* PrayerProtectionSetupView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PrayerProtectionSetupView.swift; sourceTree = "<group>"; };
+		B000001700000001 /* PrayerProtectionSetupViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PrayerProtectionSetupViewModel.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -72,6 +77,7 @@
 				A000000300000001 /* Assets.xcassets */,
 				A000003100000001 /* Preview Content */,
 				A000000500000001 /* Info.plist */,
+				A000000700000001 /* FerventApp.entitlements */,
 			);
 			path = FerventApp;
 			sourceTree = "<group>";
@@ -145,6 +151,7 @@
 				C000000700000001 /* Home */,
 				C000000800000001 /* PrayerSession */,
 				C000000900000001 /* PrayerCompletion */,
+				C000001000000001 /* PrayerProtectionSetup */,
 			);
 			path = Features;
 			sourceTree = "<group>";
@@ -181,6 +188,15 @@
 				B000001500000001 /* PrayerCompletionView.swift */,
 			);
 			path = PrayerCompletion;
+			sourceTree = "<group>";
+		};
+		C000001000000001 /* PrayerProtectionSetup */ = {
+			isa = PBXGroup;
+			children = (
+				B000001600000001 /* PrayerProtectionSetupView.swift */,
+				B000001700000001 /* PrayerProtectionSetupViewModel.swift */,
+			);
+			path = PrayerProtectionSetup;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -237,7 +253,7 @@
 /* End PBXProject section */
 
 /* Begin PBXResourcesBuildPhase section */
-		A000002200000001 /* Resources */ = {
+			A000002200000001 /* Resources */ = {
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -269,6 +285,8 @@
 				B100001300000001 /* PrayerScreenView.swift in Sources */,
 				B100001400000001 /* PrayerSessionViewModel.swift in Sources */,
 				B100001500000001 /* PrayerCompletionView.swift in Sources */,
+				B100001600000001 /* PrayerProtectionSetupView.swift in Sources */,
+				B100001700000001 /* PrayerProtectionSetupViewModel.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -400,6 +418,7 @@
 		A000006200000001 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				CODE_SIGN_ENTITLEMENTS = FerventApp/FerventApp.entitlements;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 3;
 				DEVELOPMENT_ASSET_PATHS = "\"FerventApp/Preview Content\"";
@@ -425,6 +444,7 @@
 		A000006300000001 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				CODE_SIGN_ENTITLEMENTS = FerventApp/FerventApp.entitlements;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 3;
 				DEVELOPMENT_ASSET_PATHS = "\"FerventApp/Preview Content\"";

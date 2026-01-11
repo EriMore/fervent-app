@@ -37,6 +37,10 @@ struct RootView: View {
     var body: some View {
         Group {
             switch coordinator.currentScreen {
+            case .setup:
+                PrayerProtectionSetupView()
+                    .transition(.opacity)
+                
             case .home:
                 HomeView()
                     .transition(.opacity)

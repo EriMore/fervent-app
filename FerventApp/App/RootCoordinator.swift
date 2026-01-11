@@ -7,6 +7,7 @@ import Combine
 
 /// The root navigation state for the entire app
 enum AppScreen: Equatable {
+    case setup
     case home
     case prayer(session: PrayerSession)
     case prayerComplete(session: PrayerSession)
@@ -82,6 +83,18 @@ final class RootCoordinator: ObservableObject {
         await notifications.checkAuthorizationStatus()
         
         isReady = true
+        
+        // Check if setup is needed (no apps selected)
+        if needsSetup {
+            withAnimation(.ferventStandard) {
+                currentScreen = .setup
+            }
+        }
+    }
+    
+    /// Whether setup is needed (no apps selected)
+    var needsSetup: Bool {
+        !persistence.hasSelectedApps
     }
     
     // MARK: - Navigation Actions

@@ -229,6 +229,23 @@ final class PersistenceService: ObservableObject {
             }
         }
     }
+    
+    // MARK: - Selected App Tokens Management
+    
+    /// Save selected app tokens data
+    func saveSelectedAppTokens(_ data: Data?) {
+        updateSettings { $0.selectedApplicationTokensData = data }
+    }
+    
+    /// Load selected app tokens data
+    var selectedAppTokensData: Data? {
+        settings.selectedApplicationTokensData
+    }
+    
+    /// Whether apps have been selected
+    var hasSelectedApps: Bool {
+        settings.hasSelectedApps
+    }
 }
 
 // MARK: - Debug Helpers

@@ -1,12 +1,13 @@
 import Foundation
 import Combine
+import FamilyControls
+import ManagedSettings
 
 // MARK: - App Blocking Service
-// Placeholder for Screen Time APIs - requires Family Controls capability approval from Apple
+// Screen Time API integration for prayer protection
 // "Watch and pray" (Matthew 26:41)
 
-/// Manages app blocking - currently a placeholder until Family Controls is approved
-/// The rest of the app works without this feature
+/// Manages app blocking using Apple's Family Controls framework
 @MainActor
 final class AppBlockingService: ObservableObject {
     
@@ -17,88 +18,155 @@ final class AppBlockingService: ObservableObject {
     // MARK: - Published State
     
     /// Whether the user has granted Family Controls authorization
-    /// Note: Always false until Family Controls capability is approved by Apple
     @Published private(set) var isAuthorized: Bool = false
     
     /// Whether blocking is currently active
     @Published private(set) var isBlocking: Bool = false
     
-    /// Whether Family Controls is available (requires Apple approval)
-    @Published private(set) var isAvailable: Bool = false
+    /// Currently selected app tokens
+    @Published private(set) var selection: FamilyActivitySelection?
+    
+    // MARK: - Private Properties
+    
+    private let authorizationCenter = AuthorizationCenter.shared
+    private var managedSettingsStore = ManagedSettingsStore(named: .init("FerventPrayer"))
+    private let persistence: PersistenceService
+    private var cancellables = Set<AnyCancellable>()
     
     // MARK: - Initialization
     
-    private init() {
-        // Family Controls requires capability approval from Apple
-        // Until then, app blocking is disabled but the rest of the app works
-        checkAvailability()
+    private init(persistence: PersistenceService? = nil) {
+        self.persistence = persistence ?? PersistenceService.shared
+        
+        // Observe authorization status changes
+        observeAuthorizationStatus()
+        
+        // Load saved selection
+        loadSelection()
+        
+        // Check current authorization status
+        checkAuthorizationStatus()
     }
     
-    // MARK: - Availability Check
+    // MARK: - Authorization Observing
     
-    private func checkAvailability() {
-        // Family Controls capability requires Apple approval
-        // This will be enabled once the capability is granted
-        isAvailable = false
-        isAuthorized = false
-        
-        print("App Blocking: Family Controls capability not yet approved by Apple")
-        print("App Blocking: Prayer features work normally without app blocking")
+    private func observeAuthorizationStatus() {
+        authorizationCenter.$authorizationStatus
+            .receive(on: DispatchQueue.main)
+            .sink { [weak self] status in
+                Task { @MainActor in
+                    self?.isAuthorized = (status == .approved)
+                }
+            }
+            .store(in: &cancellables)
     }
     
     // MARK: - Authorization
     
     /// Check current authorization status
     func checkAuthorizationStatus() {
-        // Placeholder - will use AuthorizationCenter.shared when available
-        isAuthorized = false
+        isAuthorized = (authorizationCenter.authorizationStatus == .approved)
     }
     
     /// Request Family Controls authorization
     func requestAuthorization() async throws {
-        // Placeholder - requires Family Controls capability
-        print("App Blocking: Family Controls not available - capability pending Apple approval")
-        throw AppBlockingError.notAvailable
+        do {
+            try await authorizationCenter.requestAuthorization(for: .individual)
+            isAuthorized = (authorizationCenter.authorizationStatus == .approved)
+            
+            if !isAuthorized {
+                throw AppBlockingError.notAuthorized
+            }
+        } catch {
+            throw AppBlockingError.authorizationFailed(error)
+        }
     }
     
-    // MARK: - Blocking Control (Placeholder)
+    // MARK: - Selection Management
     
-    /// Start blocking selected apps (placeholder)
-    func startBlocking() {
-        guard isAvailable && isAuthorized else {
-            print("App Blocking: Skipped - capability not available")
+    /// Save the current selection
+    func saveSelection(_ selection: FamilyActivitySelection) {
+        self.selection = selection
+        
+        // Encode selection to Data and save
+        do {
+            let encoder = JSONEncoder()
+            let data = try encoder.encode(selection)
+            persistence.saveSelectedAppTokens(data)
+        } catch {
+            print("Failed to save app selection: \(error)")
+        }
+    }
+    
+    /// Load saved selection from persistence
+    private func loadSelection() {
+        guard let data = persistence.selectedAppTokensData else {
+            selection = nil
             return
         }
-        // Will implement with ManagedSettingsStore when available
+        
+        do {
+            let decoder = JSONDecoder()
+            selection = try decoder.decode(FamilyActivitySelection.self, from: data)
+        } catch {
+            print("Failed to load app selection: \(error)")
+            selection = nil
+        }
     }
     
-    /// Stop blocking all apps (placeholder)
-    func stopBlocking() {
-        isBlocking = false
-        // Will implement with ManagedSettingsStore when available
+    /// Clear the current selection
+    func clearSelection() {
+        selection = nil
+        persistence.saveSelectedAppTokens(nil)
     }
-    
-    /// Emergency stop - ensures all apps are unblocked
-    func emergencyUnblock() {
-        isBlocking = false
-        // Will implement with ManagedSettingsStore when available
-    }
-    
-    // MARK: - Selection Helpers (Placeholder)
     
     /// Whether user has selected any apps to block
     var hasSelection: Bool {
-        false // Placeholder until Family Controls is available
+        guard let selection = selection else { return false }
+        return !selection.applicationTokens.isEmpty || !selection.categoryTokens.isEmpty
     }
     
     /// Number of items selected
     var selectionCount: Int {
-        0 // Placeholder until Family Controls is available
+        guard let selection = selection else { return 0 }
+        return selection.applicationTokens.count + selection.categoryTokens.count
     }
     
-    /// Clear all selections
-    func clearSelection() {
-        // Placeholder
+    // MARK: - Blocking Control
+    
+    /// Start blocking selected apps
+    func startBlocking() {
+        guard isAuthorized else {
+            print("App Blocking: Skipped - not authorized")
+            return
+        }
+        
+        guard let selection = selection, hasSelection else {
+            print("App Blocking: Skipped - no apps selected")
+            return
+        }
+        
+        // Apply blocking using ManagedSettingsStore
+        managedSettingsStore.clearAllSettings()
+        managedSettingsStore.shield.applications = Set(selection.applicationTokens)
+        managedSettingsStore.shield.applicationCategories = ShieldSettings.ActivityCategorySelection.specific(Set(selection.categoryTokens))
+        
+        isBlocking = true
+        print("App Blocking: Started blocking \(selectionCount) item(s)")
+    }
+    
+    /// Stop blocking all apps
+    func stopBlocking() {
+        managedSettingsStore.clearAllSettings()
+        isBlocking = false
+        print("App Blocking: Stopped blocking")
+    }
+    
+    /// Emergency stop - ensures all apps are unblocked
+    func emergencyUnblock() {
+        managedSettingsStore.clearAllSettings()
+        isBlocking = false
+        print("App Blocking: Emergency unblock executed")
     }
 }
 

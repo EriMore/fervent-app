@@ -25,6 +25,10 @@ struct PrayerSettings: Codable {
     /// Last completed session ID (for recovery)
     var lastActiveSessionID: UUID?
     
+    /// Selected application tokens (encoded FamilyActivitySelection data)
+    /// Stored as base64-encoded JSON data
+    var selectedApplicationTokensData: Data?
+    
     // MARK: - Defaults
     
     static let `default` = PrayerSettings(
@@ -33,7 +37,8 @@ struct PrayerSettings: Codable {
         enableFocusMode: true,
         enableAppBlocking: true,
         notificationsEnabled: true,
-        lastActiveSessionID: nil
+        lastActiveSessionID: nil,
+        selectedApplicationTokensData: nil
     )
     
     init(
@@ -42,7 +47,8 @@ struct PrayerSettings: Codable {
         enableFocusMode: Bool = true,
         enableAppBlocking: Bool = true,
         notificationsEnabled: Bool = true,
-        lastActiveSessionID: UUID? = nil
+        lastActiveSessionID: UUID? = nil,
+        selectedApplicationTokensData: Data? = nil
     ) {
         self.defaultPrayerDuration = defaultPrayerDuration
         self.prayerTimes = prayerTimes
@@ -50,6 +56,14 @@ struct PrayerSettings: Codable {
         self.enableAppBlocking = enableAppBlocking
         self.notificationsEnabled = notificationsEnabled
         self.lastActiveSessionID = lastActiveSessionID
+        self.selectedApplicationTokensData = selectedApplicationTokensData
+    }
+    
+    // MARK: - Computed Properties
+    
+    /// Whether apps have been selected
+    var hasSelectedApps: Bool {
+        selectedApplicationTokensData != nil
     }
 }
 
