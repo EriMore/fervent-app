@@ -187,7 +187,7 @@ struct PrayerScreenView: View {
             entryOpacity = 1.0
         }
         
-        withAnimation(.ferventFade.delay(0.1)) {
+        withAnimation(Animation.ferventFade.delay(0.1)) {
             logoScale = 1.0
         }
     }

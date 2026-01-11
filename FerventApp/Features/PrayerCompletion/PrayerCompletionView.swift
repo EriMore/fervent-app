@@ -141,7 +141,7 @@ struct PrayerCompletionView: View {
     
     private func animateIn() {
         // Fade in content
-        withAnimation(.ferventFade.delay(0.2)) {
+        withAnimation(Animation.ferventFade.delay(0.2)) {
             showContent = true
         }
         
@@ -151,7 +151,7 @@ struct PrayerCompletionView: View {
         }
         
         // Then slowly fades
-        withAnimation(.easeOut(duration: 3.0).delay(1.0)) {
+        withAnimation(Animation.easeOut(duration: 3.0).delay(1.0)) {
             glowIntensity = 0.6
         }
     }

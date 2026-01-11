@@ -45,6 +45,7 @@ workflows:
         script: xcode-project use-profiles
       - name: Build IPA for distribution
         script: |
+          set -e
           if [ -f FerventApp.xcworkspace ]; then
             xcode-project build-ipa --workspace "FerventApp.xcworkspace" --scheme "$XCODE_SCHEME" --export-options-plist "exportOptions.plist"
           else
