@@ -51,7 +51,7 @@ final class AppBlockingService: ObservableObject {
     /// Request Family Controls authorization
     func requestAuthorization() async throws {
         do {
-            try await authorizationCenter.requestAuthorization(for: .individual)
+            try await authorizationCenter.requestAuthorization()
             isAuthorized = (authorizationCenter.authorizationStatus == .approved)
             
             if !isAuthorized {
