@@ -29,6 +29,10 @@ struct PrayerSettings: Codable {
     /// Stored as base64-encoded JSON data
     var selectedApplicationTokensData: Data?
     
+    /// Whether prayer protection setup has been completed
+    /// For MVP: Selection is stored in memory only
+    var setupCompleted: Bool = false
+    
     // MARK: - Defaults
     
     static let `default` = PrayerSettings(
@@ -38,7 +42,8 @@ struct PrayerSettings: Codable {
         enableAppBlocking: true,
         notificationsEnabled: true,
         lastActiveSessionID: nil,
-        selectedApplicationTokensData: nil
+        selectedApplicationTokensData: nil,
+        setupCompleted: false
     )
     
     init(
@@ -48,7 +53,8 @@ struct PrayerSettings: Codable {
         enableAppBlocking: Bool = true,
         notificationsEnabled: Bool = true,
         lastActiveSessionID: UUID? = nil,
-        selectedApplicationTokensData: Data? = nil
+        selectedApplicationTokensData: Data? = nil,
+        setupCompleted: Bool = false
     ) {
         self.defaultPrayerDuration = defaultPrayerDuration
         self.prayerTimes = prayerTimes
@@ -57,6 +63,7 @@ struct PrayerSettings: Codable {
         self.notificationsEnabled = notificationsEnabled
         self.lastActiveSessionID = lastActiveSessionID
         self.selectedApplicationTokensData = selectedApplicationTokensData
+        self.setupCompleted = setupCompleted
     }
     
     // MARK: - Computed Properties

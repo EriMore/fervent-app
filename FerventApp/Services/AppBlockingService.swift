@@ -37,9 +37,6 @@ final class AppBlockingService: ObservableObject {
     private init(persistence: PersistenceService? = nil) {
         self.persistence = persistence ?? PersistenceService.shared
         
-        // Load saved selection
-        loadSelection()
-        
         // Check current authorization status
         checkAuthorizationStatus()
     }
@@ -71,36 +68,15 @@ final class AppBlockingService: ObservableObject {
     func saveSelection(_ newSelection: FamilyActivitySelection) {
         self.selection = newSelection
         
-        // Encode selection to Data using PropertyListEncoder
-        do {
-            let encoder = PropertyListEncoder()
-            let data = try encoder.encode(newSelection)
-            persistence.saveSelectedAppTokens(data)
-        } catch {
-            print("Failed to save app selection: \(error)")
-        }
-    }
-    
-    /// Load saved selection from persistence
-    private func loadSelection() {
-        guard let data = persistence.selectedAppTokensData else {
-            selection = FamilyActivitySelection()
-            return
-        }
-        
-        do {
-            let decoder = PropertyListDecoder()
-            selection = try decoder.decode(FamilyActivitySelection.self, from: data)
-        } catch {
-            print("Failed to load app selection: \(error)")
-            selection = FamilyActivitySelection()
-        }
+        // Note: FamilyActivitySelection cannot be encoded/decoded directly
+        // We store it in memory only - the selection persists while the app is running
+        // Mark setup as completed so we don't show setup screen again
+        persistence.markSetupCompleted()
     }
     
     /// Clear the current selection
     func clearSelection() {
         selection = FamilyActivitySelection()
-        persistence.saveSelectedAppTokens(nil)
     }
     
     /// Whether user has selected any apps to block

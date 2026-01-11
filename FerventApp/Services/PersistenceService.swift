@@ -242,9 +242,15 @@ final class PersistenceService: ObservableObject {
         settings.selectedApplicationTokensData
     }
     
-    /// Whether apps have been selected
+    /// Whether apps have been selected (setup completed)
+    /// For MVP: We track setup completion, not actual selection persistence
     var hasSelectedApps: Bool {
-        settings.hasSelectedApps
+        settings.setupCompleted
+    }
+    
+    /// Mark setup as completed
+    func markSetupCompleted() {
+        updateSettings { $0.setupCompleted = true }
     }
 }
 
