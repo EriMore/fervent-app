@@ -273,24 +273,6 @@
 			buildActionMask = 2147483647;
 			files = (
 				A000001100000001 /* FerventAppApp.swift in Sources */,
-				B100000100000001 /* Color+Fervent.swift in Sources */,
-				B100000200000001 /* Typography+Fervent.swift in Sources */,
-				B100000300000001 /* AmenButton.swift in Sources */,
-				B100000400000001 /* PrayerSession.swift in Sources */,
-				B100000500000001 /* PrayerSettings.swift in Sources */,
-				B100000600000001 /* PersistenceService.swift in Sources */,
-				B100000700000001 /* AppBlockingService.swift in Sources */,
-				B100000800000001 /* FocusModeService.swift in Sources */,
-				B100000900000001 /* NotificationService.swift in Sources */,
-				B100001000000001 /* RootCoordinator.swift in Sources */,
-				B100001100000001 /* HomeView.swift in Sources */,
-				B100001200000001 /* HomeViewModel.swift in Sources */,
-				B100001300000001 /* PrayerScreenView.swift in Sources */,
-				B100001400000001 /* PrayerSessionViewModel.swift in Sources */,
-				B100001500000001 /* PrayerCompletionView.swift in Sources */,
-				B100001600000001 /* PrayerProtectionSetupView.swift in Sources */,
-				B100001700000001 /* PrayerProtectionSetupViewModel.swift in Sources */,
-				B100001800000001 /* FerventLogo.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
