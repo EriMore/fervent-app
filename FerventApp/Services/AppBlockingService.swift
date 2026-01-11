@@ -24,41 +24,24 @@ final class AppBlockingService: ObservableObject {
     @Published private(set) var isBlocking: Bool = false
     
     /// Currently selected app tokens
-    @Published private(set) var selection: FamilyActivitySelection?
+    @Published var selection = FamilyActivitySelection()
     
     // MARK: - Private Properties
     
     private let authorizationCenter = AuthorizationCenter.shared
-    private var managedSettingsStore = ManagedSettingsStore(named: .init("FerventPrayer"))
+    private let managedSettingsStore = ManagedSettingsStore()
     private let persistence: PersistenceService
-    private var cancellables = Set<AnyCancellable>()
     
     // MARK: - Initialization
     
     private init(persistence: PersistenceService? = nil) {
         self.persistence = persistence ?? PersistenceService.shared
         
-        // Observe authorization status changes
-        observeAuthorizationStatus()
-        
         // Load saved selection
         loadSelection()
         
         // Check current authorization status
         checkAuthorizationStatus()
-    }
-    
-    // MARK: - Authorization Observing
-    
-    private func observeAuthorizationStatus() {
-        authorizationCenter.$authorizationStatus
-            .receive(on: DispatchQueue.main)
-            .sink { [weak self] status in
-                Task { @MainActor in
-                    self?.isAuthorized = (status == .approved)
-                }
-            }
-            .store(in: &cancellables)
     }
     
     // MARK: - Authorization
@@ -71,7 +54,7 @@ final class AppBlockingService: ObservableObject {
     /// Request Family Controls authorization
     func requestAuthorization() async throws {
         do {
-            try await authorizationCenter.requestAuthorization()
+            try await authorizationCenter.requestAuthorization(for: .individual)
             isAuthorized = (authorizationCenter.authorizationStatus == .approved)
             
             if !isAuthorized {
@@ -85,13 +68,13 @@ final class AppBlockingService: ObservableObject {
     // MARK: - Selection Management
     
     /// Save the current selection
-    func saveSelection(_ selection: FamilyActivitySelection) {
-        self.selection = selection
+    func saveSelection(_ newSelection: FamilyActivitySelection) {
+        self.selection = newSelection
         
-        // Encode selection to Data and save
+        // Encode selection to Data using PropertyListEncoder
         do {
-            let encoder = JSONEncoder()
-            let data = try encoder.encode(selection)
+            let encoder = PropertyListEncoder()
+            let data = try encoder.encode(newSelection)
             persistence.saveSelectedAppTokens(data)
         } catch {
             print("Failed to save app selection: \(error)")
@@ -101,35 +84,33 @@ final class AppBlockingService: ObservableObject {
     /// Load saved selection from persistence
     private func loadSelection() {
         guard let data = persistence.selectedAppTokensData else {
-            selection = nil
+            selection = FamilyActivitySelection()
             return
         }
         
         do {
-            let decoder = JSONDecoder()
+            let decoder = PropertyListDecoder()
             selection = try decoder.decode(FamilyActivitySelection.self, from: data)
         } catch {
             print("Failed to load app selection: \(error)")
-            selection = nil
+            selection = FamilyActivitySelection()
         }
     }
     
     /// Clear the current selection
     func clearSelection() {
-        selection = nil
+        selection = FamilyActivitySelection()
         persistence.saveSelectedAppTokens(nil)
     }
     
     /// Whether user has selected any apps to block
     var hasSelection: Bool {
-        guard let selection = selection else { return false }
-        return !selection.applicationTokens.isEmpty || !selection.categoryTokens.isEmpty
+        !selection.applicationTokens.isEmpty || !selection.categoryTokens.isEmpty
     }
     
     /// Number of items selected
     var selectionCount: Int {
-        guard let selection = selection else { return 0 }
-        return selection.applicationTokens.count + selection.categoryTokens.count
+        selection.applicationTokens.count + selection.categoryTokens.count
     }
     
     // MARK: - Blocking Control
@@ -141,15 +122,14 @@ final class AppBlockingService: ObservableObject {
             return
         }
         
-        guard let selection = selection, hasSelection else {
+        guard hasSelection else {
             print("App Blocking: Skipped - no apps selected")
             return
         }
         
         // Apply blocking using ManagedSettingsStore
-        managedSettingsStore.clearAllSettings()
-        managedSettingsStore.shield.applications = Set(selection.applicationTokens)
-        managedSettingsStore.shield.applicationCategories = ShieldSettings.ActivityCategorySelection.specific(Set(selection.categoryTokens))
+        managedSettingsStore.shield.applications = selection.applicationTokens
+        managedSettingsStore.shield.applicationCategories = .specific(selection.categoryTokens)
         
         isBlocking = true
         print("App Blocking: Started blocking \(selectionCount) item(s)")
@@ -157,14 +137,16 @@ final class AppBlockingService: ObservableObject {
     
     /// Stop blocking all apps
     func stopBlocking() {
-        managedSettingsStore.clearAllSettings()
+        managedSettingsStore.shield.applications = nil
+        managedSettingsStore.shield.applicationCategories = nil
         isBlocking = false
         print("App Blocking: Stopped blocking")
     }
     
     /// Emergency stop - ensures all apps are unblocked
     func emergencyUnblock() {
-        managedSettingsStore.clearAllSettings()
+        managedSettingsStore.shield.applications = nil
+        managedSettingsStore.shield.applicationCategories = nil
         isBlocking = false
         print("App Blocking: Emergency unblock executed")
     }
