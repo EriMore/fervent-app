@@ -88,7 +88,7 @@ struct PrayerScreenView: View {
                     .frame(width: geometry.size.width * (0.5 + Double(index) * 0.15))
                     .frame(height: geometry.size.height * 0.6)
                     .offset(y: geometry.size.height * 0.3 + CGFloat(index * 30))
-                    .blur(radius: 40 + CGFloat(index * 15) + viewModel.intensity * 20)
+                    .blur(radius: 40 + CGFloat(index * 15) + CGFloat(viewModel.intensity * 20))
                     .opacity(0.6 + viewModel.intensity * 0.4)
             }
         }
@@ -118,11 +118,11 @@ struct PrayerScreenView: View {
                             ],
                             center: .center,
                             startRadius: 20 + CGFloat(layer * 10),
-                            endRadius: 150 + (viewModel.intensity * 200) + CGFloat(layer * 50)
+                            endRadius: 150 + CGFloat(viewModel.intensity * 200) + CGFloat(layer * 50)
                         )
                     )
                     .frame(width: geometry.size.width * (1.2 + Double(layer) * 0.3))
-                    .blur(radius: 60 + viewModel.intensity * 40 + CGFloat(layer * 20))
+                    .blur(radius: 60 + CGFloat(viewModel.intensity * 40) + CGFloat(layer * 20))
                     .offset(y: geometry.size.height * 0.1)
                     .opacity(1.0 - Double(layer) * 0.2)
             }
