@@ -22,34 +22,13 @@ workflows:
           else
             echo "No Podfile — skipping pods"
           fi
-      - name: Set up keychain to be used for code signing
-        script: keychain initialize
-      - name: Set up provisioning profiles from environment variables
-        script: keychain add-certificates
-      - name: Set up provisioning profile in standard location
-        script: |
-          PROFILES_HOME="$HOME/Library/MobileDevice/Provisioning Profiles"
-          mkdir -p "$PROFILES_HOME"
-          # Copy provisioning profiles from Codemagic's signing directory if they exist
-          if [ -d "$CM_SIGNING_DIR" ]; then
-            find "$CM_SIGNING_DIR" -name "*.mobileprovision" -exec cp {} "$PROFILES_HOME/" \;
-          fi
-          # Also check for environment variable with base64 encoded profile
-          if [ -n "$CM_PROVISIONING_PROFILE" ]; then
-            echo "$CM_PROVISIONING_PROFILE" | base64 --decode > "$PROFILES_HOME/$(uuidgen).mobileprovision"
-          fi
-          # List all profiles to verify they're available
-          echo "Available provisioning profiles:"
-          ls -la "$PROFILES_HOME" || true
-      - name: Set up code signing settings on Xcode project
-        script: xcode-project use-profiles
       - name: Build IPA for distribution
         script: |
           set -e
           if [ -f FerventApp.xcworkspace ]; then
-            xcode-project build-ipa --workspace "FerventApp.xcworkspace" --scheme "$XCODE_SCHEME" --export-options-plist "exportOptions.plist"
+            xcode-project build-ipa --workspace "FerventApp.xcworkspace" --scheme "$XCODE_SCHEME"
           else
-            xcode-project build-ipa --project "FerventApp.xcodeproj" --scheme "$XCODE_SCHEME" --export-options-plist "exportOptions.plist"
+            xcode-project build-ipa --project "FerventApp.xcodeproj" --scheme "$XCODE_SCHEME"
           fi
     artifacts:
       - build/ios/ipa/*.ipa
