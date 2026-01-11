@@ -27,6 +27,7 @@
 		B100001500000001 /* PrayerCompletionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B000001500000001 /* PrayerCompletionView.swift */; };
 		B100001600000001 /* PrayerProtectionSetupView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B000001600000001 /* PrayerProtectionSetupView.swift */; };
 		B100001700000001 /* PrayerProtectionSetupViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = B000001700000001 /* PrayerProtectionSetupViewModel.swift */; };
+		B100001800000001 /* FerventLogo.swift in Sources */ = {isa = PBXBuildFile; fileRef = B000001800000001 /* FerventLogo.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -53,6 +54,7 @@
 		B000001500000001 /* PrayerCompletionView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PrayerCompletionView.swift; sourceTree = "<group>"; };
 		B000001600000001 /* PrayerProtectionSetupView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PrayerProtectionSetupView.swift; sourceTree = "<group>"; };
 		B000001700000001 /* PrayerProtectionSetupViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PrayerProtectionSetupViewModel.swift; sourceTree = "<group>"; };
+		B000001800000001 /* FerventLogo.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FerventLogo.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -160,6 +162,7 @@
 			isa = PBXGroup;
 			children = (
 				B000000300000001 /* AmenButton.swift */,
+				B000001800000001 /* FerventLogo.swift */,
 			);
 			path = Components;
 			sourceTree = "<group>";
@@ -287,6 +290,7 @@
 				B100001500000001 /* PrayerCompletionView.swift in Sources */,
 				B100001600000001 /* PrayerProtectionSetupView.swift in Sources */,
 				B100001700000001 /* PrayerProtectionSetupViewModel.swift in Sources */,
+				B100001800000001 /* FerventLogo.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

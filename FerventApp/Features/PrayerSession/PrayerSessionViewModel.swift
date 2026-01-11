@@ -16,6 +16,12 @@ final class PrayerSessionViewModel: ObservableObject {
     /// Visual intensity (0.0 to 1.0) - builds over time
     @Published private(set) var intensity: Double = 0
     
+    /// Heat phase for breathing/pulsing (subtle variation)
+    @Published private(set) var heatPhase: Double = 0
+    
+    /// Atmospheric density (0.0 to 1.0) - background darkens over time
+    @Published private(set) var atmosphericDensity: Double = 0
+    
     /// Whether the session is active
     @Published private(set) var isActive: Bool = false
     
@@ -148,10 +154,18 @@ final class PrayerSessionViewModel: ObservableObject {
             baseIntensity = 1.0 - exp(-elapsedTime / 300) // 5 min to reach ~63%
         }
         
-        // Add subtle breathing variation
-        let breathingPhase = sin(elapsedTime * 0.3) * 0.05
+        // Heat phase for breathing (slows as heat increases)
+        // Motion slows as heat increases - breathing becomes more deliberate
+        let breathingSpeed = 0.3 * (1.0 - baseIntensity * 0.5) // Slows from 0.3 to 0.15
+        heatPhase = sin(elapsedTime * breathingSpeed)
         
-        intensity = min(1.0, max(0, baseIntensity + breathingPhase))
+        // Atmospheric density - background darkens over time
+        // Deepens from charcoal to deep ember at edges
+        atmosphericDensity = min(1.0, baseIntensity * 0.8)
+        
+        // Intensity with subtle breathing variation (reduced as heat builds)
+        let breathingVariation = heatPhase * 0.05 * (1.0 - baseIntensity * 0.3)
+        intensity = min(1.0, max(0, baseIntensity + breathingVariation))
     }
     
     // MARK: - Long Press Gesture

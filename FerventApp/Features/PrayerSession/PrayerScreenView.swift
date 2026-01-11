@@ -4,19 +4,18 @@ import SwiftUI
 // The most important screen in the app
 // "When thou prayest, enter into thy closet…" (Matthew 6:6)
 //
-// This screen must feel alive, weighty, reverent.
-// No scrolling. No feeds. No clutter.
-// The prayer screen is a threshold, not a dashboard.
+// This screen is an altar, not a dashboard.
+// Prayer is a state, not an action.
+// Time is felt, not counted.
 
 struct PrayerScreenView: View {
     
     @StateObject private var viewModel: PrayerSessionViewModel
     @EnvironmentObject var coordinator: RootCoordinator
     
-    // Animation state
-    @State private var breathingScale: CGFloat = 1.0
-    @State private var glowOpacity: Double = 0.3
-    @State private var heatOffset: CGFloat = 0
+    // Entry/exit animation state
+    @State private var entryOpacity: Double = 0
+    @State private var logoScale: CGFloat = 0.8
     
     init(session: PrayerSession) {
         _viewModel = StateObject(wrappedValue: PrayerSessionViewModel(session: session))
@@ -25,185 +24,171 @@ struct PrayerScreenView: View {
     var body: some View {
         GeometryReader { geometry in
             ZStack {
-                // Deep background
+                // Deep charcoal background
                 Color.prayerBackground
                     .ignoresSafeArea()
                 
-                // Heat rising effect - subtle convection
-                heatRisingLayer(in: geometry)
+                // Atmospheric background warmth (deepens over time)
+                atmosphericBackground(in: geometry)
                 
-                // Central altar glow
-                altarGlow(in: geometry)
+                // Heat diffusion layers (convection-like motion)
+                heatDiffusionLayers(in: geometry)
                 
-                // Content
-                VStack {
-                    Spacer()
-                    
-                    // Timer (minimal)
-                    timerDisplay
-                    
-                    Spacer()
-                    
-                    // Central altar / focus point
-                    altarCenter(in: geometry)
-                    
-                    Spacer()
-                    
-                    // Amen button
-                    amenButton
-                    
-                    Spacer()
-                        .frame(height: geometry.size.height * 0.1)
-                }
+                // Central radial heat gradient (intensifies with prayer)
+                centralHeatGradient(in: geometry)
+                
+                // Central altar - logo with long-press gesture
+                centralAltar(in: geometry)
             }
         }
         .statusBarHidden(true)
         .persistentSystemOverlays(.hidden)
+        .opacity(entryOpacity)
         .onAppear {
-            startAmbientAnimations()
+            enterPrayerSpace()
         }
     }
     
-    // MARK: - Timer Display
+    // MARK: - Atmospheric Background
     
-    private var timerDisplay: some View {
-        Text(viewModel.formattedTime)
-            .font(.ferventTimer)
-            .foregroundColor(.bone.opacity(0.6 + viewModel.intensity * 0.4))
-            .monospacedDigit()
-            .contentTransition(.numericText())
-            .animation(.easeInOut(duration: 0.1), value: viewModel.elapsedTime)
+    /// Background that deepens from charcoal to deep ember over time
+    private func atmosphericBackground(in geometry: GeometryProxy) -> some View {
+        RadialGradient(
+            colors: [
+                Color.deepEmber.opacity(0.1 + viewModel.atmosphericDensity * 0.3),
+                Color.charcoal
+            ],
+            center: .center,
+            startRadius: geometry.size.width * 0.5,
+            endRadius: geometry.size.width * 1.2
+        )
+        .ignoresSafeArea()
     }
     
-    // MARK: - Heat Rising Layer
-    // Subtle convection-like motion in the background
+    // MARK: - Heat Diffusion Layers
     
-    private func heatRisingLayer(in geometry: GeometryProxy) -> some View {
+    /// Multiple blurred layers that move slowly upward (convection)
+    private func heatDiffusionLayers(in geometry: GeometryProxy) -> some View {
         ZStack {
-            // Multiple layers of heat distortion
-            ForEach(0..<3, id: \.self) { index in
-                RoundedRectangle(cornerRadius: 200)
+            ForEach(0..<4, id: \.self) { index in
+                RoundedRectangle(cornerRadius: 300)
                     .fill(
-                        LinearGradient(
+                        RadialGradient(
                             colors: [
-                                Color.emberRed.opacity(0.05 + viewModel.intensity * 0.1),
-                                Color.ferventOrange.opacity(0.02 + viewModel.intensity * 0.05),
+                                Color.ferventOrange.opacity(0.05 + viewModel.intensity * 0.15),
+                                Color.emberRed.opacity(0.02 + viewModel.intensity * 0.08),
+                                Color.deepEmber.opacity(0.01 + viewModel.intensity * 0.05),
                                 Color.clear
                             ],
-                            startPoint: .bottom,
-                            endPoint: .top
+                            center: .center,
+                            startRadius: 50,
+                            endRadius: 200 + CGFloat(index * 50)
                         )
                     )
-                    .frame(width: geometry.size.width * (0.6 + Double(index) * 0.2))
-                    .frame(height: geometry.size.height * 0.8)
-                    .offset(y: heatOffset + CGFloat(index * 20))
-                    .blur(radius: 30 + CGFloat(index * 10))
+                    .frame(width: geometry.size.width * (0.5 + Double(index) * 0.15))
+                    .frame(height: geometry.size.height * 0.6)
+                    .offset(y: geometry.size.height * 0.3 + CGFloat(index * 30))
+                    .blur(radius: 40 + CGFloat(index * 15) + viewModel.intensity * 20)
+                    .opacity(0.6 + viewModel.intensity * 0.4)
             }
         }
-        .offset(y: geometry.size.height * 0.2)
+        .animation(
+            Animation.easeInOut(duration: max(5.0, 8.0 - viewModel.intensity * 4.0))
+                .repeatForever(autoreverses: true),
+            value: viewModel.intensity
+        )
     }
     
-    // MARK: - Altar Glow
-    // Central radial glow that intensifies with prayer
+    // MARK: - Central Heat Gradient
     
-    private func altarGlow(in geometry: GeometryProxy) -> some View {
-        Circle()
-            .fill(
-                RadialGradient.prayerIntensity(viewModel.intensity)
-            )
-            .frame(width: geometry.size.width * 1.5)
-            .offset(y: geometry.size.height * 0.15)
-            .scaleEffect(breathingScale)
-            .blur(radius: 60)
-    }
-    
-    // MARK: - Altar Center
-    // The visual focus point - responds to stillness
-    
-    private func altarCenter(in geometry: GeometryProxy) -> some View {
+    /// Radial gradient that intensifies from center outward
+    /// Represents spiritual heat accumulation, not flames
+    private func centralHeatGradient(in geometry: GeometryProxy) -> some View {
         ZStack {
-            // Outer glow ring
-            Circle()
-                .stroke(
-                    Color.ferventOrange.opacity(0.2 + viewModel.intensity * 0.3),
-                    lineWidth: 2
-                )
-                .frame(width: 120, height: 120)
-                .scaleEffect(breathingScale * 1.1)
-            
-            // Inner glow
-            Circle()
-                .fill(
-                    RadialGradient(
-                        colors: [
-                            Color.ferventOrange.opacity(0.3 + viewModel.intensity * 0.4),
-                            Color.emberRed.opacity(0.1 + viewModel.intensity * 0.2),
-                            Color.clear
-                        ],
-                        center: .center,
-                        startRadius: 10,
-                        endRadius: 60
+            // Multiple layers for depth and atmospheric haze
+            ForEach(0..<3, id: \.self) { layer in
+                Circle()
+                    .fill(
+                        RadialGradient(
+                            colors: [
+                                Color.ferventOrange.opacity(0.1 + viewModel.intensity * (0.5 - Double(layer) * 0.1)),
+                                Color.emberRed.opacity(0.05 + viewModel.intensity * (0.3 - Double(layer) * 0.05)),
+                                Color.deepEmber.opacity(0.02 + viewModel.intensity * (0.1 - Double(layer) * 0.02)),
+                                Color.clear
+                            ],
+                            center: .center,
+                            startRadius: 20 + CGFloat(layer * 10),
+                            endRadius: 150 + (viewModel.intensity * 200) + CGFloat(layer * 50)
+                        )
                     )
-                )
-                .frame(width: 100, height: 100)
-                .scaleEffect(breathingScale)
-            
-            // Core ember
-            Circle()
-                .fill(Color.ferventOrange.opacity(glowOpacity + viewModel.intensity * 0.3))
-                .frame(width: 20, height: 20)
-                .blur(radius: 5)
+                    .frame(width: geometry.size.width * (1.2 + Double(layer) * 0.3))
+                    .blur(radius: 60 + viewModel.intensity * 40 + CGFloat(layer * 20))
+                    .offset(y: geometry.size.height * 0.1)
+                    .opacity(1.0 - Double(layer) * 0.2)
+            }
         }
     }
     
-    // MARK: - Amen Button
-    // Long-press to complete prayer - intentional friction
+    // MARK: - Central Altar
     
-    private var amenButton: some View {
-        VStack(spacing: FerventSpacing.sm) {
-            // Progress indicator
-            if viewModel.isLongPressing {
-                ProgressView(value: viewModel.longPressProgress)
-                    .progressViewStyle(AmenProgressStyle())
-                    .frame(width: 200)
-                    .transition(.opacity)
+    /// The sacred center - logo with integrated long-press Amen gesture
+    private func centralAltar(in geometry: GeometryProxy) -> some View {
+        VStack {
+            Spacer()
+            
+            // Central altar area (logo + gesture region)
+            ZStack {
+                // Invisible gesture area (larger than logo)
+                Circle()
+                    .fill(Color.clear)
+                    .frame(width: 200, height: 200)
+                    .contentShape(Circle())
+                    .gesture(
+                        DragGesture(minimumDistance: 0)
+                            .onChanged { _ in
+                                if !viewModel.isLongPressing {
+                                    viewModel.startLongPress()
+                                    // Haptic feedback
+                                    let impactLight = UIImpactFeedbackGenerator(style: .light)
+                                    impactLight.impactOccurred()
+                                }
+                                
+                                // Check for completion
+                                if viewModel.checkLongPressComplete() {
+                                    completePrayer()
+                                }
+                            }
+                            .onEnded { _ in
+                                if !viewModel.checkLongPressComplete() {
+                                    viewModel.cancelLongPress()
+                                }
+                            }
+                    )
+                
+                // Fervent logo at center
+                FerventLogo(
+                    intensity: viewModel.isLongPressing ? 1.0 : viewModel.intensity,
+                    isBreathing: true,
+                    size: 80
+                )
+                .scaleEffect(logoScale)
             }
             
-            // Amen text/button
-            Text("Amen")
-                .font(.ferventAmen)
-                .foregroundColor(
-                    viewModel.isLongPressing
-                    ? .ferventOrange
-                    : .bone.opacity(0.5)
-                )
-                .scaleEffect(viewModel.isLongPressing ? 1.1 : 1.0)
-                .animation(.ferventLongPress, value: viewModel.isLongPressing)
-                .gesture(
-                    DragGesture(minimumDistance: 0)
-                        .onChanged { _ in
-                            if !viewModel.isLongPressing {
-                                viewModel.startLongPress()
-                                // Haptic feedback
-                                let impactLight = UIImpactFeedbackGenerator(style: .light)
-                                impactLight.impactOccurred()
-                            }
-                            
-                            // Check for completion
-                            if viewModel.checkLongPressComplete() {
-                                completePrayer()
-                            }
-                        }
-                        .onEnded { _ in
-                            if !viewModel.checkLongPressComplete() {
-                                viewModel.cancelLongPress()
-                            }
-                        }
-                )
-            
-            Text("Hold to complete")
-                .font(.ferventCaption)
-                .foregroundColor(.secondaryText.opacity(0.5))
+            Spacer()
+        }
+    }
+    
+    // MARK: - Entry Animation
+    
+    /// Enter the prayer space - feels like entering a sacred place
+    private func enterPrayerSpace() {
+        // Logo emerges from darkness
+        withAnimation(.ferventFade) {
+            entryOpacity = 1.0
+        }
+        
+        withAnimation(.ferventFade.delay(0.1)) {
+            logoScale = 1.0
         }
     }
     
@@ -214,68 +199,20 @@ struct PrayerScreenView: View {
         let impactMedium = UIImpactFeedbackGenerator(style: .medium)
         impactMedium.impactOccurred()
         
+        // Begin cooling animation
+        withAnimation(.ferventCompletion) {
+            entryOpacity = 0.8
+        }
+        
         // Stop session
         viewModel.stopSession()
         
-        // Navigate to completion
+        // Navigate to completion (feels like departing)
         Task {
+            // Brief pause to feel the cooling
+            try? await Task.sleep(nanoseconds: 300_000_000) // 0.3 seconds
             await coordinator.completePrayer()
         }
-    }
-    
-    // MARK: - Ambient Animations
-    
-    private func startAmbientAnimations() {
-        // Breathing scale animation
-        withAnimation(.ferventBreathing) {
-            breathingScale = 1.05
-        }
-        
-        // Glow pulse animation
-        withAnimation(.ferventGlowPulse) {
-            glowOpacity = 0.5
-        }
-        
-        // Heat rising animation
-        withAnimation(
-            Animation
-                .easeInOut(duration: 8)
-                .repeatForever(autoreverses: true)
-        ) {
-            heatOffset = -30
-        }
-    }
-}
-
-// MARK: - Amen Progress Style
-// Custom progress indicator for the long-press
-
-struct AmenProgressStyle: ProgressViewStyle {
-    func makeBody(configuration: Configuration) -> some View {
-        GeometryReader { geometry in
-            ZStack(alignment: .leading) {
-                // Track
-                Capsule()
-                    .fill(Color.bone.opacity(0.1))
-                    .frame(height: 4)
-                
-                // Progress
-                Capsule()
-                    .fill(
-                        LinearGradient(
-                            colors: [.ferventOrange, .warmAccent],
-                            startPoint: .leading,
-                            endPoint: .trailing
-                        )
-                    )
-                    .frame(
-                        width: geometry.size.width * (configuration.fractionCompleted ?? 0),
-                        height: 4
-                    )
-                    .animation(.linear(duration: 0.05), value: configuration.fractionCompleted)
-            }
-        }
-        .frame(height: 4)
     }
 }
 
@@ -285,4 +222,3 @@ struct AmenProgressStyle: ProgressViewStyle {
     PrayerScreenView(session: PrayerSession.startNew(intendedDuration: 300))
         .environmentObject(RootCoordinator())
 }
-
