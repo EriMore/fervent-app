@@ -22,15 +22,24 @@ workflows:
           else
             echo "No Podfile — skipping pods"
           fi
+      - name: Set up keychain for code signing
+        script: keychain initialize
+      - name: Fetch signing files
+        script: |
+          app-store-connect fetch-signing-files "$BUNDLE_ID" \
+            --type IOS_APP_STORE \
+            --create
+      - name: Set up signing certificate
+        script: keychain add-certificates
+      - name: Set up code signing in Xcode project
+        script: xcode-project use-profiles
       - name: Build IPA for distribution
         script: |
           set -e
-          # Use project's exportOptions.plist (without provisioningProfiles)
-          # Codemagic's ios_signing handles provisioning automatically
           if [ -f FerventApp.xcworkspace ]; then
-            xcode-project build-ipa --workspace "FerventApp.xcworkspace" --scheme "$XCODE_SCHEME" --export-options-plist "exportOptions.plist"
+            xcode-project build-ipa --workspace "FerventApp.xcworkspace" --scheme "$XCODE_SCHEME"
           else
-            xcode-project build-ipa --project "FerventApp.xcodeproj" --scheme "$XCODE_SCHEME" --export-options-plist "exportOptions.plist"
+            xcode-project build-ipa --project "FerventApp.xcodeproj" --scheme "$XCODE_SCHEME"
           fi
     artifacts:
       - build/ios/ipa/*.ipa
