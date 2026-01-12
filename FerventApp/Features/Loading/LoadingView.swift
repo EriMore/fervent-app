@@ -31,23 +31,20 @@ struct LoadingView: View {
                 Color.charcoal
                     .ignoresSafeArea()
                 
-                // Radial heat gradient - warmth emanating from center
-                heatGradient(in: geometry)
+                // Subtle dark background - bare minimum visibility
+                darkAtmosphere(in: geometry)
                 
-                // Content
-                VStack(spacing: FerventSpacing.xl) {
-                    Spacer()
-                    
-                    // Fervent Logo (with embedded wordmark)
+                // Content Layer
+                ZStack {
+                    // Centered Logo (contains wordmark)
                     logoView
                     
-                    Spacer()
-                    
-                    // Subtle loading indicator
-                    loadingIndicator
-                    
-                    Spacer()
-                        .frame(height: geometry.size.height * 0.15)
+                    // Bottom Loading Indicator
+                    VStack {
+                        Spacer()
+                        loadingIndicator
+                            .padding(.bottom, geometry.safeAreaInsets.bottom + 60)
+                    }
                 }
             }
         }
@@ -57,78 +54,60 @@ struct LoadingView: View {
         }
     }
     
-    // MARK: - Heat Gradient Background
+    // MARK: - Background
     
-    /// Radial gradient simulating heat diffusion from center
-    /// Warm, never neon. High contrast, never harsh.
-    private func heatGradient(in geometry: GeometryProxy) -> some View {
-        ZStack {
-            // Primary radial gradient - deep ember glow
-            RadialGradient(
-                colors: [
-                    Color.deepEmber.opacity(0.5),
-                    Color.deepEmber.opacity(0.2),
-                    Color.charcoal
-                ],
-                center: .center,
-                startRadius: 50,
-                endRadius: geometry.size.height * 0.7
-            )
-            .ignoresSafeArea()
-            
-            // Secondary subtle warmth layer
-            RadialGradient(
-                colors: [
-                    Color.emberRed.opacity(0.15),
-                    Color.clear
-                ],
-                center: .center,
-                startRadius: 20,
-                endRadius: geometry.size.width * 0.5
-            )
-            .ignoresSafeArea()
-        }
+    /// Extremely subtle, deep atmospheric background
+    /// "Deep darkness... The stillness before and around the fire"
+    private func darkAtmosphere(in geometry: GeometryProxy) -> some View {
+        RadialGradient(
+            colors: [
+                Color.deepEmber.opacity(0.15), // Very faint center
+                Color.charcoal.opacity(0.8),   // Darkens quickly
+                Color.charcoal                 // Pure charcoal edges
+            ],
+            center: .center,
+            startRadius: 10,
+            endRadius: geometry.size.width * 0.8
+        )
+        .ignoresSafeArea()
     }
     
     // MARK: - Logo View
     
-    /// The Fervent logo with breathing animation
-    /// Logo includes the wordmark as provided
+    /// The Fervent logo asset (includes wordmark)
     private var logoView: some View {
         Image("FerventLogo")
             .resizable()
             .scaledToFit()
-            .frame(width: 200)
+            .frame(width: 180) // Slightly smaller to be tasteful
             .opacity(logoOpacity)
             .scaleEffect(logoScale)
     }
     
     // MARK: - Loading Indicator
     
-    /// Custom warm-colored loading spinner
-    /// Subtle, not clinical. Matches the fire aesthetic.
+    /// Minimal, dark loading spinner
     private var loadingIndicator: some View {
         ZStack {
-            // Track circle
+            // Track circle - barely visible
             Circle()
-                .stroke(Color.bone.opacity(0.1), lineWidth: 2)
-                .frame(width: 32, height: 32)
+                .stroke(Color.charcoal.opacity(0.5), lineWidth: 2)
+                .frame(width: 24, height: 24)
             
-            // Animated arc
+            // Animated arc - deep ember, not bright orange
             Circle()
-                .trim(from: 0, to: 0.3)
+                .trim(from: 0, to: 0.25)
                 .stroke(
-                    LinearGradient(
+                    AngularGradient(
                         colors: [
-                            Color.ferventOrange,
-                            Color.ferventOrange.opacity(0.3)
+                            Color.emberRed.opacity(0.8),
+                            Color.deepEmber.opacity(0)
                         ],
-                        startPoint: .leading,
-                        endPoint: .trailing
+                        center: .center
                     ),
                     style: StrokeStyle(lineWidth: 2, lineCap: .round)
                 )
-                .frame(width: 32, height: 32)
+                .frame(width: 24, height: 24)
                 .rotationEffect(.degrees(spinnerRotation))
         }
         .opacity(spinnerOpacity)
