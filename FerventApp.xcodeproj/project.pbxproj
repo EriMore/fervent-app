@@ -28,6 +28,8 @@
 		B100001600000001 /* PrayerProtectionSetupView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B000001600000001 /* PrayerProtectionSetupView.swift */; };
 		B100001700000001 /* PrayerProtectionSetupViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = B000001700000001 /* PrayerProtectionSetupViewModel.swift */; };
 		B100001800000001 /* FerventLogo.swift in Sources */ = {isa = PBXBuildFile; fileRef = B000001800000001 /* FerventLogo.swift */; };
+		B100001900000001 /* LoadingView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B000001900000001 /* LoadingView.swift */; };
+		B100002000000001 /* HelloWorldView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B000002000000001 /* HelloWorldView.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -55,6 +57,8 @@
 		B000001600000001 /* PrayerProtectionSetupView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PrayerProtectionSetupView.swift; sourceTree = "<group>"; };
 		B000001700000001 /* PrayerProtectionSetupViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PrayerProtectionSetupViewModel.swift; sourceTree = "<group>"; };
 		B000001800000001 /* FerventLogo.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FerventLogo.swift; sourceTree = "<group>"; };
+		B000001900000001 /* LoadingView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoadingView.swift; sourceTree = "<group>"; };
+		B000002000000001 /* HelloWorldView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HelloWorldView.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -150,12 +154,30 @@
 		C000000500000001 /* Features */ = {
 			isa = PBXGroup;
 			children = (
+				C000001100000001 /* Loading */,
+				C000001200000001 /* HelloWorld */,
 				C000000700000001 /* Home */,
 				C000000800000001 /* PrayerSession */,
 				C000000900000001 /* PrayerCompletion */,
 				C000001000000001 /* PrayerProtectionSetup */,
 			);
 			path = Features;
+			sourceTree = "<group>";
+		};
+		C000001100000001 /* Loading */ = {
+			isa = PBXGroup;
+			children = (
+				B000001900000001 /* LoadingView.swift */,
+			);
+			path = Loading;
+			sourceTree = "<group>";
+		};
+		C000001200000001 /* HelloWorld */ = {
+			isa = PBXGroup;
+			children = (
+				B000002000000001 /* HelloWorldView.swift */,
+			);
+			path = HelloWorld;
 			sourceTree = "<group>";
 		};
 		C000000600000001 /* Components */ = {
@@ -273,6 +295,26 @@
 			buildActionMask = 2147483647;
 			files = (
 				A000001100000001 /* FerventAppApp.swift in Sources */,
+				B100000100000001 /* Color+Fervent.swift in Sources */,
+				B100000200000001 /* Typography+Fervent.swift in Sources */,
+				B100000300000001 /* AmenButton.swift in Sources */,
+				B100000400000001 /* PrayerSession.swift in Sources */,
+				B100000500000001 /* PrayerSettings.swift in Sources */,
+				B100000600000001 /* PersistenceService.swift in Sources */,
+				B100000700000001 /* AppBlockingService.swift in Sources */,
+				B100000800000001 /* FocusModeService.swift in Sources */,
+				B100000900000001 /* NotificationService.swift in Sources */,
+				B100001000000001 /* RootCoordinator.swift in Sources */,
+				B100001100000001 /* HomeView.swift in Sources */,
+				B100001200000001 /* HomeViewModel.swift in Sources */,
+				B100001300000001 /* PrayerScreenView.swift in Sources */,
+				B100001400000001 /* PrayerSessionViewModel.swift in Sources */,
+				B100001500000001 /* PrayerCompletionView.swift in Sources */,
+				B100001600000001 /* PrayerProtectionSetupView.swift in Sources */,
+				B100001700000001 /* PrayerProtectionSetupViewModel.swift in Sources */,
+				B100001800000001 /* FerventLogo.swift in Sources */,
+				B100001900000001 /* LoadingView.swift in Sources */,
+				B100002000000001 /* HelloWorldView.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
