@@ -2,10 +2,8 @@ import SwiftUI
 
 // MARK: - Loading View
 // The first screen anyone sees when entering Fervent
-// "Nothing pops. Everything settles."
-//
-// Fire is expressed through heat diffusion and glow gradients,
-// not literal flames. The logo breathes gently.
+// Vibrant heat gradient with centered logo
+// "Our God is a consuming fire"
 
 struct LoadingView: View {
     
@@ -27,12 +25,8 @@ struct LoadingView: View {
     var body: some View {
         GeometryReader { geometry in
             ZStack {
-                // Deep charcoal base
-                Color.charcoal
-                    .ignoresSafeArea()
-                
-                // Subtle dark background - bare minimum visibility
-                darkAtmosphere(in: geometry)
+                // Vibrant Heat Gradient Background
+                vibrantAtmosphere
                 
                 // Content Layer
                 ZStack {
@@ -56,18 +50,17 @@ struct LoadingView: View {
     
     // MARK: - Background
     
-    /// Extremely subtle, deep atmospheric background
-    /// "Deep darkness... The stillness before and around the fire"
-    private func darkAtmosphere(in geometry: GeometryProxy) -> some View {
-        RadialGradient(
+    /// Vibrant vertical gradient: Orange -> Red -> Deep Ember
+    /// Matches the reference image's warm, intense heat
+    private var vibrantAtmosphere: some View {
+        LinearGradient(
             colors: [
-                Color.deepEmber.opacity(0.15), // Very faint center
-                Color.charcoal.opacity(0.8),   // Darkens quickly
-                Color.charcoal                 // Pure charcoal edges
+                Color.ferventOrange,  // Top: Bright Fire
+                Color.emberRed,       // Middle: Deep Red
+                Color.deepEmber       // Bottom: Dark Ember
             ],
-            center: .center,
-            startRadius: 10,
-            endRadius: geometry.size.width * 0.8
+            startPoint: .top,
+            endPoint: .bottom
         )
         .ignoresSafeArea()
     }
@@ -79,32 +72,26 @@ struct LoadingView: View {
         Image("FerventLogo")
             .resizable()
             .scaledToFit()
-            .frame(width: 180) // Slightly smaller to be tasteful
+            .frame(width: 180)
             .opacity(logoOpacity)
             .scaleEffect(logoScale)
     }
     
     // MARK: - Loading Indicator
     
-    /// Minimal, dark loading spinner
+    /// Minimal loading spinner - White for contrast against vibrant background
     private var loadingIndicator: some View {
         ZStack {
-            // Track circle - barely visible
+            // Track circle - subtle white
             Circle()
-                .stroke(Color.charcoal.opacity(0.5), lineWidth: 2)
+                .stroke(Color.white.opacity(0.2), lineWidth: 2)
                 .frame(width: 24, height: 24)
             
-            // Animated arc - deep ember, not bright orange
+            // Animated arc - pure white
             Circle()
                 .trim(from: 0, to: 0.25)
                 .stroke(
-                    AngularGradient(
-                        colors: [
-                            Color.emberRed.opacity(0.8),
-                            Color.deepEmber.opacity(0)
-                        ],
-                        center: .center
-                    ),
+                    Color.white,
                     style: StrokeStyle(lineWidth: 2, lineCap: .round)
                 )
                 .frame(width: 24, height: 24)
@@ -144,8 +131,8 @@ struct LoadingView: View {
             spinnerRotation = 360
         }
         
-        // Trigger completion after loading period
-        DispatchQueue.main.asyncAfter(deadline: .now() + 2.5) {
+        // Trigger completion after 4 seconds (per user request)
+        DispatchQueue.main.asyncAfter(deadline: .now() + 4.0) {
             onLoadingComplete?()
         }
     }
